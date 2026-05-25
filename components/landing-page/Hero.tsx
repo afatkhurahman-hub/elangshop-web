@@ -10,7 +10,12 @@ import {
   Crown,
   Gamepad2,
   Bolt,
+  Tv, // Cadangan Netflix / Video
+  Music, // Cadangan Spotify
+  Palette, // Cadangan Canva
+  Film, // Cadangan Disney+
 } from "lucide-react";
+
 // Import data dari file sebelah
 import { productsData } from "./productsData";
 
@@ -121,23 +126,23 @@ export default function Hero() {
       const customEvent = event as CustomEvent;
       if (!customEvent.detail) return;
 
-      // 1. Ambil nama produk dan sub nominal secara aman
-      const clickedProductTitle = typeof customEvent.detail === "object"
-        ? customEvent.detail.title
-        : customEvent.detail;
-      const clickedProductSub = typeof customEvent.detail === "object"
-        ? customEvent.detail.sub
-        : "";
+      const clickedProductTitle =
+        typeof customEvent.detail === "object"
+          ? customEvent.detail.title
+          : customEvent.detail;
+      const clickedProductSub =
+        typeof customEvent.detail === "object" ? customEvent.detail.sub : "";
 
       let foundTab = "";
       let foundProduct = "";
 
-      // 2. Cari di seluruh kategori/tab mana produk ini berada
       for (const tabKey of Object.keys(productsData)) {
         const config = productsData[tabKey as keyof typeof productsData];
         if (config && Array.isArray(config.products)) {
           const matched = config.products.find(
-            (p) => typeof p === "string" && p.toLowerCase() === clickedProductTitle?.toLowerCase()
+            (p) =>
+              typeof p === "string" &&
+              p.toLowerCase() === clickedProductTitle?.toLowerCase(),
           );
 
           if (matched) {
@@ -148,18 +153,17 @@ export default function Hero() {
         }
       }
 
-      // 3. Jika ketemu di data produk normal, set state secara berurutan
       if (foundTab && foundProduct) {
         setActiveTab(foundTab);
         setSelectedProduct(foundProduct);
 
-        // Langsung cari pasangannya di level item nominal agar tidak bentrok dengan useEffect lain
         const config = productsData[foundTab as keyof typeof productsData];
         const availableItems = (config?.items as any)?.[foundProduct] || [];
-        
-        // Cari yang label item-nya mengandung angka/teks nominal dari promo (misal "12 Diamonds")
+
         const matchedItem = availableItems.find((item: any) =>
-          item.label.toLowerCase().includes(clickedProductSub.toString().toLowerCase())
+          item.label
+            .toLowerCase()
+            .includes(clickedProductSub.toString().toLowerCase()),
         );
 
         if (matchedItem) {
@@ -183,34 +187,58 @@ export default function Hero() {
     setUserId("");
   }, [activeTab]);
 
-  // 🔥 SINKRONISASI PRODUK PERTAMA SAAT TAB BERGANTI SECARA MANUAL
+  // 🔥 SINKRONISASI PRODUK PERTAMA SAAT TAB BERGANTI SECARA MANUAL (URUT ABJAD A-Z)
   useEffect(() => {
-    if (currentConfig?.products) {
-      // Hanya set ke produk pertama jika produk yang terpilih saat ini memang benar-benar tidak ada di tab baru
+    if (currentConfig?.products && currentConfig.products.length > 0) {
       const isProductInConfig = currentConfig.products.some(
-        (p) => p.toLowerCase() === selectedProduct.toLowerCase()
+        (p) => p.toLowerCase() === selectedProduct.toLowerCase(),
       );
-      
-      if (!isProductInConfig && currentConfig.products.length > 0) {
-        setSelectedProduct(currentConfig.products[0]);
+
+      if (!isProductInConfig) {
+        // Ambil array produk asli, urutkan alfabetis, lalu ambil indeks pertama [0]
+        const sortedProducts = [...currentConfig.products].sort((a, b) =>
+          a.localeCompare(b),
+        );
+        setSelectedProduct(sortedProducts[0]);
       }
     } else {
       setSelectedProduct("");
     }
+  }, [activeTab, currentConfig, selectedProduct]);
+
+  // 🔥 SINKRONISASI PRODUK PERTAMA SAAT TAB BERGANTI SECARA MANUAL (URUT ABJAD A-Z)
+  useEffect(() => {
+    if (currentConfig?.products && currentConfig.products.length > 0) {
+      const isProductInConfig = currentConfig.products.some(
+        (p) => p.toLowerCase() === selectedProduct.toLowerCase(),
+      );
+
+      if (!isProductInConfig) {
+        // Ambil array produk asli, urutkan alfabetis, lalu ambil indeks pertama [0]
+        const sortedProducts = [...currentConfig.products].sort((a, b) =>
+          a.localeCompare(b),
+        );
+        setSelectedProduct(sortedProducts[0]);
+      }
+    } else {
+      setSelectedProduct("");
+    }
+    // 🛠️ Hapus selectedProduct dari sini agar ukuran array dependency selalu konstan & stabil
   }, [activeTab, currentConfig]);
 
   // 🔥 SINKRONISASI PILIHAN ITEM NOMINAL DAN HARGA SAAT PRODUK BERGANTI
   useEffect(() => {
     if (currentConfig && selectedProduct) {
-      const availableItems = (currentConfig.items as any)[selectedProduct] || [];
+      const availableItems =
+        (currentConfig.items as any)[selectedProduct] || [];
       if (Array.isArray(availableItems) && availableItems.length > 0) {
-        // Cari tahu apakah item yang terpilih saat ini ada di dalam produk yang baru
-        const currentItemValid = availableItems.find((i: any) => i.label === selectedItem);
-        
+        const currentItemValid = availableItems.find(
+          (i: any) => i.label === selectedItem,
+        );
+
         if (currentItemValid) {
           setCurrentPrice(currentItemValid.price);
         } else {
-          // Jika tidak ada atau berganti produk baru, ambil item pertama dari produk tersebut
           setSelectedItem(availableItems[0].label);
           setCurrentPrice(availableItems[0].price);
         }
@@ -222,6 +250,7 @@ export default function Hero() {
       setSelectedItem("");
       setCurrentPrice("Rp 0");
     }
+    // 🛠️ Cukup amati selectedProduct & currentConfig, hapus selectedItem agar ukuran dependency tidak berubah
   }, [selectedProduct, currentConfig]);
 
   const handleItemChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -290,12 +319,115 @@ export default function Hero() {
     return config?.inputPlaceholder || "Masukkan ID";
   };
 
+  // Helper untuk mendapatkan icon gambar pendukung di dekat header form jika diperlukan
+  const getProductImage = (productName: string) => {
+    if (!productName) return "/logo.png";
+    const name = productName.toLowerCase();
+
+    // === GAME ===
+    if (name.includes("mobile legends")) return "/ml.png";
+    if (name.includes("free fire")) return "/ff.png";
+    if (name.includes("pubg")) return "/pubgg.png";
+    if (name.includes("call of duty") || name.includes("cod"))
+      return "/cod.png";
+    if (name.includes("valorant")) return "/valorantt.png";
+    if (name.includes("aov")) return "/aov.png";
+    if (name.includes("genshin")) return "/gi.png";
+
+    // === E-WALLET ===
+    if (name.includes("dana")) return "/dana1.png";
+    if (name.includes("gopay")) return "/gopay1.png";
+    if (name.includes("ovo")) return "/ovo.png";
+    if (name.includes("shopee")) return "/shoppepay1.png";
+
+    // === PREMIUM APP ===
+    if (name.includes("netflix")) return "/netflix.png";
+    if (name.includes("youtube") || name.includes("ytb")) return "/ytbprem.png";
+    if (name.includes("spotify")) return "/spotifyy.png";
+    if (name.includes("vidio")) return "/vidio.png";
+    if (name.includes("we tv") || name.includes("wetv")) return "/wetv.png";
+    if (name.includes("viu")) return "/viu.png";
+    if (name.includes("disney")) return "/disney.png";
+    if (name.includes("bstation")) return "/bstation.png";
+    if (name.includes("canva")) return "/canva.png";
+    if (name.includes("capcut")) return "/capcut.png";
+    if (name.includes("picsart")) return "/picsart.png";
+    if (name.includes("alight motion") || name.includes("am")) return "/am.png";
+    if (name.includes("primevideo")) return "/primevideo.png";
+
+    // === PULSA & DATA OPERATOR ===
+    if (name.includes("telkomsel")) return "/telkomsel.png";
+    if (name.includes("indosat")) return "/indosat.png";
+    if (name.includes("xl")) return "/xl.png";
+    if (name.includes("axis")) return "/axis.png";
+    if (name.includes("smartfren")) return "/smartfren.png";
+    if (name.includes("tri") || name.startsWith("3")) return "/3.png";
+    if (name.includes("by.u") || name.includes("byu")) return "/byu.png";
+
+    // Default fallback memakai logo toko utama jika tidak terdeteksi (seperti PLN)
+    return "/logo.png";
+  };
+
+  const activeProductImg = getProductImage(selectedProduct);
+
+  // =========================================================================
+  // 🦅 SYSTEM KEAMANAN LOGO: RENDER FALLBACK SVG JIKA GAMBAR LOKAL = /logo.png
+  // =========================================================================
+  const renderSecureLogo = () => {
+    // Jika gambar lokalnya custom (artinya file gambarmu lengkap & ketemu), langsung render tag <img>
+    if (activeProductImg !== "/logo.png") {
+      return (
+        <img
+          src={activeProductImg}
+          alt={selectedProduct}
+          className="absolute left-3 w-5 h-5 rounded-md object-cover z-10 pointer-events-none"
+          onError={(e) => {
+            // Jika misal gambar lokal corrupt/hilang secara tidak sengaja, sembunyikan img-nya
+            (e.target as HTMLElement).style.display = "none";
+          }}
+        />
+      );
+    }
+
+    // --- JIKA TIDAK KETEMU ATAU KEMBALI KE /logo.png, KITA AMANKAN PAKAI SVG CAKEP ---
+    const name = selectedProduct.toLowerCase();
+
+    if (
+      name.includes("pln") ||
+      name.includes("token") ||
+      name.includes("listrik")
+    ) {
+      return <Bolt className="absolute left-3 text-yellow-400 w-5 h-5 z-10" />;
+    }
+    if (activeTab.toLowerCase().includes("game")) {
+      return (
+        <Gamepad2 className="absolute left-3 text-blue-400 w-5 h-5 z-10" />
+      );
+    }
+    if (activeTab.toLowerCase().includes("wallet")) {
+      return (
+        <Wallet className="absolute left-3 text-emerald-400 w-5 h-5 z-10" />
+      );
+    }
+    if (
+      activeTab.toLowerCase().includes("pulsa") ||
+      activeTab.toLowerCase().includes("data")
+    ) {
+      return (
+        <Smartphone className="absolute left-3 text-purple-400 w-5 h-5 z-10" />
+      );
+    }
+
+    // Default ultimate fallback jika benar-benar tidak terdeteksi apa-apa
+    return <Crown className="absolute left-3 text-[#FACC15] w-5 h-5 z-10" />;
+  };
+
   return (
     <>
       {/* SECTION CONTAINER UTAMA */}
-      <section className="relative px-4 sm:px-6 xl:px-16 pt-24 lg:pt-12 pb-14 overflow-x-hidden text-white bg-[#050B18] w-full">
+      <section className="relative px-6 xl:px-16 pt-12 pb-14 overflow-hidden text-white bg-[#050B18]">
         {/* 🦅 MASKOT ELANG BACKGROUND ABSOLUTE */}
-        <div className="hidden lg:block absolute left-[38%] top-1/2 -translate-y-1/2 w-[300px] h-auto pointer-events-none select-none mix-blend-screen opacity-85 z-0">
+        <div className="hidden lg:block absolute left-[32%] xl:left-[31%] top-1/2 -translate-y-1/2 w-[390px] h-auto pointer-events-none select-none mix-blend-screen opacity-90 z-0">
           <img
             src="/hero-banner.png"
             alt="Mankels Elang"
@@ -304,9 +436,9 @@ export default function Hero() {
         </div>
 
         {/* LAYOUT GRID UTAMA */}
-        <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10 w-full">
+        <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
           {/* SISI KIRI: TEKS UTAMA & BENEFIT HORIZONTAL */}
-          <div className="lg:col-span-7 space-y-7 text-center lg:text-left z-10 w-full">
+          <div className="lg:col-span-6 xl:col-span-7 space-y-7 text-center lg:text-left z-10">
             {/* BADGE */}
             <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 px-4 py-2 rounded-full">
               <Zap size={14} className="text-blue-400 fill-blue-400/20" />
@@ -316,7 +448,7 @@ export default function Hero() {
             </div>
 
             {/* TEXT MAIN */}
-            <h1 className="text-[32px] sm:text-[35px] xl:text-[40px] leading-[1.1] sm:leading-[1.05] font-black tracking-tight drop-shadow-md">
+            <h1 className="text-[35px] xl:text-[38px] leading-[1.1] font-black tracking-tight drop-shadow-md">
               Top Up Cepat,
               <br />
               <span className="text-[#FACC15]">Harga Hemat,</span>
@@ -324,13 +456,13 @@ export default function Hero() {
               <span className="text-white">Transaksi Anti Ribet!</span>
             </h1>
 
-            <p className="text-gray-400 text-sm sm:text-[15px] xl:text-[14px] leading-relaxed max-w-[460px] mx-auto lg:mx-0 px-2 sm:px-0">
+            <p className="text-gray-400 text-[15px] xl:text-[14px] leading-relaxed max-w-[460px] mx-auto lg:mx-0">
               Top Up Game, pulsa, e-wallet, dan aplikasi premium dengan
               pembayaran QRIS & proses instan.
             </p>
 
-            {/* ⚡ BARIS BENEFIT HORIZONTAL (Sekarang rapi di HP) ⚡ */}
-            <div className="pt-2 flex flex-row items-center justify-start lg:justify-start gap-4 overflow-x-auto scrollbar-none snap-x w-full px-2 sm:px-0 no-scrollbar">
+            {/* ⚡ BARIS BENEFIT HORIZONTAL ⚡ */}
+            <div className="pt-2 flex flex-row items-center justify-center lg:justify-start gap-x-8 gap-y-4 overflow-x-auto scrollbar-none snap-x w-full">
               {[
                 {
                   title: "Proses Instan",
@@ -350,16 +482,16 @@ export default function Hero() {
               ].map((item, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-3 text-left shrink-0 snap-center bg-[#0e1628]/40 lg:bg-transparent p-3 lg:p-0 rounded-xl border border-white/5 lg:border-none"
+                  className="flex items-center gap-3 text-left shrink-0 snap-numerator"
                 >
-                  <div className="w-9 h-9 rounded-full bg-[#1A2438]/80 border border-white/5 flex items-center justify-center shrink-0 shadow-md">
-                    <item.icon size={14} className="text-blue-400" />
+                  <div className="w-10 h-10 rounded-full bg-[#1A2438]/80 border border-white/5 flex items-center justify-center shrink-0 shadow-md">
+                    <item.icon size={15} className="text-blue-400" />
                   </div>
                   <div className="leading-tight">
-                    <h3 className="font-bold text-[12px] xl:text-[14px] text-white tracking-wide whitespace-nowrap">
+                    <h3 className="font-bold text-[13px] xl:text-[14px] text-white tracking-wide">
                       {item.title}
                     </h3>
-                    <p className="text-[10px] text-gray-500 mt-0.5 whitespace-nowrap">
+                    <p className="text-[11px] text-gray-500 mt-0.5">
                       {item.desc}
                     </p>
                   </div>
@@ -371,11 +503,11 @@ export default function Hero() {
           {/* SISI KANAN: FORM TRANSAKSI */}
           <div
             id="transaction-form"
-            className="lg:col-span-5 flex justify-center lg:justify-end w-full z-10 scroll-mt-24"
+            className="lg:col-span-6 xl:col-span-5 flex justify-center lg:justify-end w-full z-10 scroll-mt-12"
           >
-            <div className="w-full max-w-[500px] bg-[#0E1628]/85 border border-white/10 rounded-[22px] sm:rounded-[28px] p-4 sm:p-7 backdrop-blur-xl shadow-2xl box-border">
-              {/* TAB SELECTION (Ditambahkan flex-nowrap & overflow-x-auto murni agar tidak meluber di HP) */}
-              <div className="flex items-center border-b border-white/5 pb-2 sm:pb-3 mb-4 sm:mb-6 gap-4 overflow-x-auto scrollbar-none flex-nowrap no-scrollbar w-full">
+            <div className="w-full max-w-[500px] bg-[#0E1628]/85 border border-white/10 rounded-[22px] sm:rounded-[28px] p-5 sm:p-7 backdrop-blur-xl shadow-2xl relative">
+              {/* TAB SELECTION */}
+              <div className="flex items-center justify-between border-b border-white/5 pb-2 sm:pb-3 mb-4 sm:mb-6 gap-2 overflow-x-auto scrollbar-none flex-nowrap">
                 {[
                   "Game",
                   "Pulsa",
@@ -391,10 +523,10 @@ export default function Hero() {
                     <button
                       key={item}
                       onClick={() => setActiveTab(item)}
-                      className="relative pb-2 shrink-0 bg-transparent border-none outline-none cursor-pointer"
+                      className="relative pb-2 shrink-0"
                     >
                       <span
-                        className={`text-[13px] sm:text-[11px] font-bold tracking-wide transition-colors whitespace-nowrap block ${
+                        className={`text-[12px] sm:text-[11px] font-bold tracking-wide transition-colors whitespace-nowrap ${
                           isActive
                             ? "text-[#FACC15]"
                             : "text-gray-500 hover:text-gray-400"
@@ -425,21 +557,29 @@ export default function Hero() {
                             ? "Jenis Layanan"
                             : "Pilih Game"}
                     </label>
-                    <select
-                      value={selectedProduct}
-                      onChange={(e) => setSelectedProduct(e.target.value)}
-                      className="w-full h-[46px] sm:h-[52px] bg-[#111C33] border border-white/5 rounded-xl sm:rounded-2xl px-3 sm:px-4 text-[13px] font-semibold outline-none text-white focus:border-[#FACC15]/30 cursor-pointer"
-                    >
-                      {currentConfig?.products?.map((prod) => (
-                        <option
-                          key={prod}
-                          value={prod}
-                          className="bg-[#0E1628]"
-                        >
-                          {prod}
-                        </option>
-                      ))}
-                    </select>
+                    <div className="relative flex items-center">
+                      {/* 🔥 RENDER LOGO AMAN & CERDAS DISINI */}
+                      {renderSecureLogo()}
+
+                      <select
+                        value={selectedProduct}
+                        onChange={(e) => setSelectedProduct(e.target.value)}
+                        className="w-full h-[46px] sm:h-[52px] bg-[#111C33] border border-white/5 rounded-xl sm:rounded-2xl text-[13px] font-semibold outline-none text-white focus:border-[#FACC15]/30 cursor-pointer pl-10 pr-4"
+                      >
+                        {/* 🔄 Mengurutkan nama produk dari A ke Z secara alfabetis */}
+                        {[...(currentConfig?.products || [])]
+                          .sort((a, b) => a.localeCompare(b))
+                          .map((prod) => (
+                            <option
+                              key={prod}
+                              value={prod}
+                              className="bg-[#0E1628]"
+                            >
+                              {prod}
+                            </option>
+                          ))}
+                      </select>
+                    </div>
                   </div>
 
                   {/* Dropdown 2 */}
@@ -473,7 +613,7 @@ export default function Hero() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   {/* Input ID */}
                   <div className="space-y-1 sm:space-y-2">
-                    <label className="text-[11px] sm:text-[12px] font-bold text-gray-400 tracking-wide block truncate">
+                    <label className="text-[11px] sm:text-[12px] font-bold text-gray-400 tracking-wide block">
                       {getDynamicPlaceholder()}
                     </label>
                     <input
@@ -502,11 +642,11 @@ export default function Hero() {
                 <div className="flex gap-3 pt-1">
                   <button
                     onClick={handleOrderWhatsApp}
-                    className="flex-1 h-[46px] sm:h-[52px] rounded-xl sm:rounded-2xl bg-[#FACC15] text-black font-black text-[13px] hover:bg-[#EAB308] transition shadow-lg shadow-[#FACC15]/10 active:scale-[0.99] cursor-pointer"
+                    className="flex-1 h-[46px] sm:h-[52px] rounded-xl sm:rounded-2xl bg-[#FACC15] text-black font-black text-[13px] hover:bg-[#EAB308] transition shadow-lg shadow-[#FACC15]/10 active:scale-[0.99]"
                   >
                     Beli Sekarang
                   </button>
-                  <button className="w-[46px] h-[46px] sm:w-[52px] sm:h-[52px] rounded-xl sm:rounded-2xl bg-[#111C33] border border-white/5 flex items-center justify-center hover:border-[#FACC15]/20 transition group shrink-0 cursor-pointer">
+                  <button className="w-[46px] h-[46px] sm:w-[52px] sm:h-[52px] rounded-xl sm:rounded-2xl bg-[#111C33] border border-white/5 flex items-center justify-center hover:border-[#FACC15]/20 transition group shrink-0">
                     <Zap
                       className="text-[#FACC15] group-hover:scale-110 transition"
                       size={15}
@@ -520,8 +660,8 @@ export default function Hero() {
       </section>
 
       {/* LOWER SECTION: KATEGORI KARTU BAWAH */}
-      <section className="px-4 sm:px-6 xl:px-16 pb-16 text-white bg-[#050B18] w-full">
-        <div className="max-w-[1400px] mx-auto grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4 w-full">
+      <section className="px-6 xl:px-16 pb-16 text-white bg-[#050B18]">
+        <div className="max-w-[1400px] mx-auto grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4">
           {[
             {
               icon: Smartphone,

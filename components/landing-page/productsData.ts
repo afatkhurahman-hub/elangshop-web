@@ -1,6 +1,14 @@
 export const productsData = {
   Game: {
-    products: ["Mobile Legends", "Free Fire", "PUBG Mobile", "Call of Duty", "Valorant"],
+    products: [
+      "Mobile Legends",
+      "Free Fire",
+      "PUBG Mobile",
+      "Call of Duty",
+      "Valorant",
+      "AOV",
+      "Genshin Impact",
+    ],
     items: {
       "Mobile Legends": [
         { label: "5 Diamonds", price: "Rp 4.610" },
@@ -105,6 +113,25 @@ export const productsData = {
         { label: "7000 Points", price: "Rp 658.000" },
         { label: "10500 Points", price: "Rp 980.000" },
       ],
+      "AOV": [
+        { label: "40 Voucher", price: "Rp 12.207" },
+        { label: "90 Voucher", price: "Rp 21.414" },
+        { label: "230 Voucher", price: "Rp 49.035" },
+        { label: "470 Voucher", price: "Rp 95.070" },
+        { label: "950 Voucher", price: "Rp 187.140" },
+        { label: "1430 Voucher", price: "Rp 279.210" },
+        { label: "2390 Voucher", price: "Rp 463.350" },
+        { label: "4800 Voucher", price: "Rp 923.700" },
+      ],
+      "Genshin Impact": [
+        { label: "60 Crystals", price: "Rp 15.500" },
+        { label: "330 Crystals", price: "Rp 61.500" },
+        { label: "10900 Crystals", price: "Rp 178.100" },
+        { label: "1340 Crystals", price: "Rp 381.600" },
+        { label: "3880 Crystals", price: "Rp 584.000" },
+        { label: "9080 Crystals", price: "Rp 1.133.000" },
+        { label: "Blessing", price: "Rp 60.500" },
+      ],
     },
     inputType: "text",
     // Bagian petunjuk teks otomatis berdasarkan game yang dipilih:
@@ -113,11 +140,21 @@ export const productsData = {
       "Free Fire": "Masukkan Player ID",
       "PUBG Mobile": "Masukkan Character ID",
       "Call of Duty": "Masukkan OpenID CODM",
-      "Valorant": "Masukkan Riot ID + Tag (Nick#1234)"
-    }
+      "Valorant": "Masukkan Riot ID + Tag (Nick#1234)",
+      "AOV": "Masukkan OpenID AOV",
+      "Genshin Impact": "Masukkan UID & Server (12345678 - Asia)"
+    },
   },
   Pulsa: {
-    products: ["Telkomsel", "Indosat", "XL Axiata", "Axis", "Smartfren", "Tri", "by.U"],
+    products: [
+      "Telkomsel",
+      "Indosat",
+      "XL Axiata",
+      "Axis",
+      "Smartfren",
+      "Tri",
+      "by.U",
+    ],
     items: {
       Telkomsel: [
         { label: "Pulsa 5 Ribu", price: "Rp 6.500" },
@@ -194,7 +231,15 @@ export const productsData = {
     inputPlaceholder: "Masukkan No HP",
   },
   "Paket Data": {
-    products: ["Telkomsel Data", "Indosat Data", "XL Data", "Axis Data", "Smartfren Data", "Tri Data", "by.U Data"],
+    products: [
+      "Telkomsel Data",
+      "Indosat Data",
+      "XL Data",
+      "Axis Data",
+      "Smartfren Data",
+      "Tri Data",
+      "by.U Data",
+    ],
     items: {
       "Telkomsel Data": [
         { label: "Internet 1GB / 2 Hari (Flash)", price: "Rp 7.500" },
@@ -229,8 +274,14 @@ export const productsData = {
         { label: "Bronet 3GB / 30 Hari", price: "Rp 21.500" },
         { label: "Bronet 5GB / 30 Hari", price: "Rp 32.000" },
         { label: "Bronet 10GB / 30 Hari", price: "Rp 54.000" },
-        { label: "OWSEM 16GB (2GB Utama + 14GB Sosmed/Malam)", price: "Rp 43.000" },
-        { label: "OWSEM 24GB (3GB Utama + 21GB Sosmed/Malam)", price: "Rp 56.000" },
+        {
+          label: "OWSEM 16GB (2GB Utama + 14GB Sosmed/Malam)",
+          price: "Rp 43.000",
+        },
+        {
+          label: "OWSEM 24GB (3GB Utama + 21GB Sosmed/Malam)",
+          price: "Rp 56.000",
+        },
       ],
       "Smartfren Data": [
         { label: "1GB / Hari Volumetrik - 7 Hari", price: "Rp 21.000" },
@@ -247,8 +298,14 @@ export const productsData = {
         { label: "Happy 12GB / 30 Hari", price: "Rp 43.000" },
         { label: "Happy 18GB / 30 Hari", price: "Rp 55.000" },
         { label: "Happy 30GB / 30 Hari", price: "Rp 82.000" },
-        { label: "AlwaysOn (AON) 6GB (Masa Aktif Selamanya)", price: "Rp 31.000" },
-        { label: "AlwaysOn (AON) 12GB (Masa Aktif Selamanya)", price: "Rp 53.000" },
+        {
+          label: "AlwaysOn (AON) 6GB (Masa Aktif Selamanya)",
+          price: "Rp 31.000",
+        },
+        {
+          label: "AlwaysOn (AON) 12GB (Masa Aktif Selamanya)",
+          price: "Rp 53.000",
+        },
       ],
       "by.U Data": [
         { label: "Yang Bikin Nagih 1GB / 1 Hari", price: "Rp 5.000" },
@@ -257,7 +314,10 @@ export const productsData = {
         { label: "Yang Bikin Nagih 3GB / 14 Hari", price: "Rp 19.500" },
         { label: "Yang Bikin Samaan 10GB / 30 Hari", price: "Rp 45.000" },
         { label: "Yang Bikin Kaya Kuota 35GB / 30 Hari", price: "Rp 85.000" },
-        { label: "Yang Bikin Kalong Nyaman 50GB / 30 Hari (Malam)", price: "Rp 40.000" },
+        {
+          label: "Yang Bikin Kalong Nyaman 50GB / 30 Hari (Malam)",
+          price: "Rp 40.000",
+        },
       ],
     },
     inputType: "tel",
@@ -300,20 +360,20 @@ export const productsData = {
   },
   Premium: {
     products: [
-      "Netflix", 
-      "YouTube", 
-      "Spotify", 
-      "Vidio", 
-      "Vidio Premier", 
-      "We TV", 
-      "Viu", 
-      "Prime Video", 
-      "Disney+", 
-      "BStation", 
-      "Canva", 
-      "CapCut Pro", 
-      "PicsArt Gold", 
-      "Alight Motion"
+      "Netflix",
+      "YouTube",
+      "Spotify",
+      "Vidio",
+      "Vidio Premier",
+      "We TV",
+      "Viu",
+      "Prime Video",
+      "Disney+",
+      "BStation",
+      "Canva",
+      "CapCut Pro",
+      "PicsArt Gold",
+      "Alight Motion",
     ],
     items: {
       Netflix: [

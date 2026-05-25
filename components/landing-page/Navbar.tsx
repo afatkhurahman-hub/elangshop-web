@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search, Menu, X } from "lucide-react"; // Ditambahkan Menu dan X untuk icon HP
+import { Search, Menu, X } from "lucide-react";
 
 export default function Navbar() {
   const [activeMenu, setActiveMenu] = useState("Beranda");
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // State baru untuk menu HP
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const menuList = [
     "Beranda",
@@ -16,7 +16,6 @@ export default function Navbar() {
     "Promo",
   ];
 
-  // Efek tambahan agar menu aktif di navbar bisa mendengarkan perubahan tab di Hero secara dua arah
   useEffect(() => {
     const handleGlobalTabSync = (event: Event) => {
       const customEvent = event as CustomEvent<string>;
@@ -37,15 +36,13 @@ export default function Navbar() {
 
   const handleMenuClick = (menu: string) => {
     setActiveMenu(menu);
-    setIsMobileMenuOpen(false); // Tutup menu HP otomatis setelah klik menu
+    setIsMobileMenuOpen(false);
 
-    // 🔥 LOGIKA KHUSUS 1: JIKA KLIK BERANDA
     if (menu === "Beranda") {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
-    // 🔥 LOGIKA KHUSUS 2: JIKA KLIK PROMO
     if (menu === "Promo") {
       const promoElement = document.getElementById("promo-section");
       if (promoElement) {
@@ -54,7 +51,6 @@ export default function Navbar() {
       return;
     }
 
-    // Pemetaan target tab form transaksi di Hero
     let targetTab = menu;
     if (menu === "Pulsa & Data") {
       targetTab = "Pulsa";
@@ -68,17 +64,26 @@ export default function Navbar() {
 
   return (
     <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#050B18]/95 backdrop-blur-xl w-full">
-      {/* Container Utama */}
-      <div className="max-w-7xl mx-auto px-4 h-[78px] flex items-center justify-between gap-2">
+      {/* Container Utama - Menyesuaikan tinggi sedikit di HP agar proporsional */}
+      <div className="max-w-7xl mx-auto px-4 h-[70px] xl:h-[78px] flex items-center justify-between gap-3">
         
-        {/* LOGO */}
-        <div className="flex items-center gap-2 shrink-0">
-          <img src="/logo.png" alt="logo" className="w-8" />
-          <h1 className="text-[18px] font-black leading-none whitespace-nowrap">
-            <span className="text-white">ELANG</span>
-            <span className="text-yellow-400">SHOP</span>
+        {/* ========================== LOGO (BISA DIKLIK BALIK BERANDA) ========================== */}
+        <button 
+          onClick={() => handleMenuClick("Beranda")}
+          className="flex items-center gap-1.5 sm:gap-2 shrink-0 group outline-none text-left active:scale-95 transition-transform"
+        >
+          {/* Di HP ukuran logo disesuaikan jadi w-7 h-7, dan diberi shrink-0 agar tidak gepeng/hilang */}
+          <img
+            src="/logo.png"
+            alt="ELANGSHOP Logo"
+            className="w-7 h-7 xl:w-8 xl:h-8 object-contain shrink-0 group-hover:brightness-110 transition-all"
+          />
+          {/* Ukuran teks diturunkan sedikit di HP agar muat berdampingan dengan tombol login/daftar */}
+          <h1 className="text-[15px] sm:text-[16px] xl:text-[18px] font-black leading-none whitespace-nowrap tracking-wide select-none">
+            <span className="text-white group-hover:text-gray-200 transition-colors">ELANG</span>
+            <span className="text-yellow-400 group-hover:text-yellow-300 transition-colors">SHOP</span>
           </h1>
-        </div>
+        </button>
 
         {/* BARISAN MENU (Hanya muncul di Desktop / xl) */}
         <div className="hidden xl:flex items-center gap-4 text-[13px] font-semibold whitespace-nowrap h-full pt-1">
@@ -117,29 +122,29 @@ export default function Navbar() {
         </div>
 
         {/* TOMBOL AKSI */}
-        <div className="flex items-center gap-2 shrink-0">
-          {/* Cek Transaksi disembunyikan di HP, diganti masuk ke dalam menu toggle */}
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           <button className="hidden xl:flex h-[40px] px-3 items-center justify-center rounded-xl border border-white/10 hover:border-yellow-400 transition text-xs font-semibold text-white whitespace-nowrap">
             Cek Transaksi
           </button>
-          <button className="h-[40px] px-4 rounded-xl border border-white/10 hover:border-yellow-400 transition text-xs font-semibold text-white whitespace-nowrap">
+          {/* Ukuran padding tombol login & daftar disesuaikan di layar super kecil (HP jadul) */}
+          <button className="h-[36px] xl:h-[40px] px-3 sm:px-4 rounded-xl border border-white/10 hover:border-yellow-400 transition text-xs font-semibold text-white whitespace-nowrap">
             Login
           </button>
-          <button className="h-[40px] px-4 rounded-xl bg-yellow-400 text-black font-black hover:opacity-90 transition text-xs whitespace-nowrap">
+          <button className="h-[36px] xl:h-[40px] px-3 sm:px-4 rounded-xl bg-yellow-400 text-black font-black hover:opacity-90 transition text-xs whitespace-nowrap">
             Daftar
           </button>
 
-          {/* TOGGLE BUTTON FOR MOBILE (Muncul hanya di bawah ukuran layar xl) */}
+          {/* TOGGLE BUTTON FOR MOBILE */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="xl:hidden flex h-[40px] w-[40px] items-center justify-center rounded-xl border border-white/10 text-white hover:border-yellow-400 transition"
+            className="xl:hidden flex h-[36px] w-[36px] sm:h-[40px] sm:w-[40px] items-center justify-center rounded-xl border border-white/10 text-white hover:border-yellow-400 transition"
           >
-            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+            {isMobileMenuOpen ? <X size={18} /> : <Menu size={18} />}
           </button>
         </div>
       </div>
 
-      {/* TAMPILAN MENU MOBILE DROPDOWN (Muncul jika tombol hamburger di-klik) */}
+      {/* TAMPILAN MENU MOBILE DROPDOWN */}
       {isMobileMenuOpen && (
         <div className="xl:hidden bg-[#050B18] border-b border-white/10 px-4 py-4 space-y-3 animate-fade-in">
           {/* Search Bar Mobile */}

@@ -41,17 +41,15 @@ export default function Featrues() {
     <section className="px-4 md:px-6 pb-6">
       {/* Grid utama: 1 kolom di mobile, 2 kolom ganjil di desktop xl */}
       <div className="max-w-[1400px] mx-auto grid grid-cols-1 xl:grid-cols-[2.5fr_1fr] gap-4 items-stretch">
-        
         {/* LEFT PROMO (CAROUSEL BANNER) */}
         <div className="relative overflow-hidden rounded-[28px] border border-white/10 bg-gradient-to-r from-[#102768] via-[#091a45] to-[#081120] h-[160px] sm:h-[170px] px-6 sm:px-8 flex items-center transition-all duration-500">
-          
           <div className="relative z-10 w-[65%] sm:w-[60%] flex flex-col justify-start pt-1">
             <div>
               <div className="inline-flex px-2 py-0 rounded-full bg-yellow-400/10 border border-yellow-400/20 text-yellow-400 font-bold text-[10px] sm:text-[11px] mb-1.5">
                 PROMO SPESIAL
               </div>
             </div>
-            
+
             <div key={currentSlide} className="animate-fadeIn">
               <h2 className="text-[18px] sm:text-[24px] xl:text-[28px] font-black leading-none text-white tracking-wide">
                 {promoSlides[currentSlide].title}
@@ -84,8 +82,8 @@ export default function Featrues() {
                 key={idx}
                 onClick={() => setCurrentSlide(idx)}
                 className={`h-1.5 sm:h-2 rounded-full transition-all duration-300 ${
-                  idx === currentSlide 
-                    ? "bg-yellow-400 w-4 sm:w-5" 
+                  idx === currentSlide
+                    ? "bg-yellow-400 w-4 sm:w-5"
                     : "bg-white/20 w-1.5 sm:w-2 hover:bg-white/40"
                 }`}
                 aria-label={`Go to slide ${idx + 1}`}
@@ -159,7 +157,6 @@ export default function Featrues() {
             />
           </div>
         </div>
-
       </div>
     </section>
   );
