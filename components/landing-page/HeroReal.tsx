@@ -21,9 +21,10 @@ export default function Hero() {
   const [currentPrice, setCurrentPrice] = useState("Rp 0");
 
   // Cari key asli di productsData yang cocok tanpa sensitif huruf besar/kecil
-  const matchedKey = Object.keys(productsData).find(
-    (k) => k.toLowerCase() === activeTab.toLowerCase()
-  ) || "Game";
+  const matchedKey =
+    Object.keys(productsData).find(
+      (k) => k.toLowerCase() === activeTab.toLowerCase(),
+    ) || "Game";
 
   const currentConfig = productsData[matchedKey as keyof typeof productsData];
 
@@ -45,7 +46,7 @@ export default function Hero() {
         const config = productsData[tabKey as keyof typeof productsData];
         if (config && Array.isArray(config.products)) {
           const matched = config.products.find(
-            (p) => p.toLowerCase() === clickedProductTitle.toLowerCase()
+            (p) => p.toLowerCase() === clickedProductTitle.toLowerCase(),
           );
           if (matched) {
             foundTab = tabKey;
@@ -106,7 +107,8 @@ export default function Hero() {
     const itemName = e.target.value;
     setSelectedItem(itemName);
 
-    const availableItems = (currentConfig?.items as any)?.[selectedProduct] || [];
+    const availableItems =
+      (currentConfig?.items as any)?.[selectedProduct] || [];
     if (Array.isArray(availableItems)) {
       const matched = availableItems.find((i: any) => i.label === itemName);
       if (matched) {
@@ -131,7 +133,11 @@ export default function Hero() {
     }
 
     // 2. Kondisi otomatis untuk Tab Pulsa & Paket Data
-    if (tab.includes("pulsa") || tab.includes("data") || tab.includes("internet")) {
+    if (
+      tab.includes("pulsa") ||
+      tab.includes("data") ||
+      tab.includes("internet")
+    ) {
       return "Masukkan No HP";
     }
 
@@ -153,12 +159,12 @@ export default function Hero() {
     <>
       {/* SECTION CONTAINER Utuh - Ditambahkan responsive padding untuk kenyamanan HP */}
       <section className="relative px-4 sm:px-6 xl:px-10 pt-24 pb-12 overflow-hidden text-white bg-[#050B18]">
-        {/* 🦅 MASKOT ELANG RAKSASA (Dibuat adaptif agar tidak menabrak / merusak layout HP) 🦅 */}
-        <div className="absolute top-[40%] lg:top-1/2 left-1/2 lg:left-[45%] -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none select-none mix-blend-screen opacity-20 lg:opacity-90 transition-opacity duration-300">
+        {/* 🦅 MASKOT ELANG RAKSASA (POSISI DIOPTIMALKAN AGAR TIDAK NABRAK TEKS) 🦅 */}
+        <div className="absolute top-1/2 left-1/2 md:left-[55%] lg:left-[60%] xl:left-[55%] -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none select-none mix-blend-screen opacity-30 lg:opacity-75 hidden sm:block">
           <img
             src="/hero-banner.png"
             alt="Elang Megah"
-            className="w-[320px] sm:w-[450px] md:w-[600px] lg:w-[650px] xl:w-[500px] h-auto object-contain max-w-none"
+            className="w-[450px] md:w-[550px] lg:w-[650px] xl:w-[600px] h-auto object-contain max-w-none"
           />
         </div>
 
@@ -227,7 +233,8 @@ export default function Hero() {
               <div className="flex items-center justify-between border-b border-white/5 pb-3 mb-6 gap-2 overflow-x-auto scrollbar-none">
                 {["Game", "Pulsa", "Paket Data", "E-Wallet", "Premium"].map(
                   (item) => {
-                    const isActive = activeTab.toLowerCase() === item.toLowerCase();
+                    const isActive =
+                      activeTab.toLowerCase() === item.toLowerCase();
                     return (
                       <button
                         key={item}
@@ -248,7 +255,7 @@ export default function Hero() {
                         )}
                       </button>
                     );
-                  }
+                  },
                 )}
               </div>
 
@@ -262,7 +269,11 @@ export default function Hero() {
                       {(() => {
                         const tab = activeTab.toLowerCase();
                         if (tab.includes("premium")) return "Pilih Aplikasi";
-                        if (tab.includes("pulsa") || tab.includes("data") || tab.includes("internet"))
+                        if (
+                          tab.includes("pulsa") ||
+                          tab.includes("data") ||
+                          tab.includes("internet")
+                        )
                           return "Pilih Operator";
                         if (tab.includes("wallet") || tab.includes("dompet"))
                           return "Pilih E-Wallet";

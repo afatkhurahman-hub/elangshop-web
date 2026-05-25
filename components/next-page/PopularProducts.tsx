@@ -3,18 +3,23 @@
 import { ChevronRight } from "lucide-react";
 
 const products = [
-  { image: "/emel.png", title: "Mobile Legends", sub: "11 Diamonds", price: "Rp 3.150" },
-  { image: "/epep.png", title: "Free Fire", sub: "70 Diamonds", price: "Rp 5.000" },
-  { image: "/pubgg.png", title: "PUBG Mobile", sub: "60 UC", price: "Rp 6.000" },
-  { image: "/valorantt.png", title: "Valorant", sub: "475 VP", price: "Rp 15.000" },
-  { image: "/spotifyy.png", title: "Spotify", sub: "1 Bulan", price: "Rp 49.990" },
-  { image: "/netflixx.png", title: "Netflix", sub: "1 Bulan", price: "Rp 54.000" },
+  { image: "/emel.png", title: "Mobile Legends", sub: "12 Diamonds", price: "Rp 6.813" },
+  { image: "/epep.png", title: "Free Fire", sub: "70 Diamonds", price: "Rp 10.348" },
+  { image: "/pubgg.png", title: "PUBG Mobile", sub: "30 UC", price: "Rp 11.000" },
+  { image: "/valorantt.png", title: "Valorant", sub: "475 VP", price: "Rp 50.000" },
+  { image: "/spotifyy.png", title: "Spotify", sub: "1 Bulan", price: "Rp 25.000" },
+  { image: "/netflixx.png", title: "Netflix", sub: "1 Bulan", price: "Rp 50.000" },
 ];
 
 export default function PopularProducts() {
-  const handleProductClick = (productTitle: string) => {
-    // 1. Kirim sinyal nama game ke komponen Hero secara global tanpa mengganggu app/page.tsx
-    const event = new CustomEvent("selectProduct", { detail: productTitle });
+  const handleProductClick = (item: typeof products[number]) => {
+    // 1. Kirim data lengkap (title dan sub) ke form transaksi di atas
+    const event = new CustomEvent("selectProduct", { 
+      detail: {
+        title: item.title,
+        sub: item.sub
+      } 
+    });
     window.dispatchEvent(event);
 
     // 2. Otomatis scroll mulus kembali ke atas menuju form transaksi
@@ -35,7 +40,7 @@ export default function PopularProducts() {
           {products.map((item, index) => (
             <div
               key={index}
-              onClick={() => handleProductClick(item.title)} // 🔥 Aksi klik ditambahkan di sini
+              onClick={() => handleProductClick(item)} // 🔥 Mengirimkan seluruh object item
               className="bg-[#0E1628] border border-white/10 rounded-[18px] p-4 hover:border-yellow-400 transition cursor-pointer"
             >
               <div className="flex gap-4">

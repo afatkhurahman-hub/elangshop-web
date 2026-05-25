@@ -157,7 +157,7 @@ export default function FaqAndFooter() {
                 <p onClick={() => handleProductMenuClick("Pulsa")} className="hover:text-yellow-400 transition cursor-pointer">Pulsa & Data</p>
                 <p onClick={() => handleProductMenuClick("E-Wallet")} className="hover:text-yellow-400 transition cursor-pointer">E-Wallet</p>
                 <p onClick={() => handleProductMenuClick("Premium")} className="hover:text-yellow-400 transition cursor-pointer">Aplikasi Premium</p>
-                <p onClick={() => handleProductMenuClick("Top Up Game")} className="hover:text-yellow-400 transition cursor-pointer">Listrik PLN</p>
+                <p onClick={() => handleProductMenuClick("PLN")} className="hover:text-yellow-400 transition cursor-pointer">Listrik PLN</p>
               </div>
             </div>
 
