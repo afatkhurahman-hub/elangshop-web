@@ -293,7 +293,7 @@ export default function Hero() {
   return (
     <>
       {/* SECTION CONTAINER UTAMA */}
-      <section className="relative px-6 xl:px-16 pt-12 pb-14 overflow-hidden text-white bg-[#050B18]">
+      <section className="relative px-4 sm:px-6 xl:px-16 pt-24 lg:pt-12 pb-14 overflow-x-hidden text-white bg-[#050B18] w-full">
         {/* 🦅 MASKOT ELANG BACKGROUND ABSOLUTE */}
         <div className="hidden lg:block absolute left-[38%] top-1/2 -translate-y-1/2 w-[300px] h-auto pointer-events-none select-none mix-blend-screen opacity-85 z-0">
           <img
@@ -304,9 +304,9 @@ export default function Hero() {
         </div>
 
         {/* LAYOUT GRID UTAMA */}
-        <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+        <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10 w-full">
           {/* SISI KIRI: TEKS UTAMA & BENEFIT HORIZONTAL */}
-          <div className="lg:col-span-7 space-y-7 text-center lg:text-left z-10">
+          <div className="lg:col-span-7 space-y-7 text-center lg:text-left z-10 w-full">
             {/* BADGE */}
             <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 px-4 py-2 rounded-full">
               <Zap size={14} className="text-blue-400 fill-blue-400/20" />
@@ -316,7 +316,7 @@ export default function Hero() {
             </div>
 
             {/* TEXT MAIN */}
-            <h1 className="text-[35px] xl:text-[40px] leading-[1.05] font-black tracking-tight drop-shadow-md">
+            <h1 className="text-[32px] sm:text-[35px] xl:text-[40px] leading-[1.1] sm:leading-[1.05] font-black tracking-tight drop-shadow-md">
               Top Up Cepat,
               <br />
               <span className="text-[#FACC15]">Harga Hemat,</span>
@@ -324,13 +324,13 @@ export default function Hero() {
               <span className="text-white">Transaksi Anti Ribet!</span>
             </h1>
 
-            <p className="text-gray-400 text-[15px] xl:text-[14px] leading-relaxed max-w-[460px] mx-auto lg:mx-0">
+            <p className="text-gray-400 text-sm sm:text-[15px] xl:text-[14px] leading-relaxed max-w-[460px] mx-auto lg:mx-0 px-2 sm:px-0">
               Top Up Game, pulsa, e-wallet, dan aplikasi premium dengan
               pembayaran QRIS & proses instan.
             </p>
 
-            {/* ⚡ BARIS BENEFIT HORIZONTAL ⚡ */}
-            <div className="pt-2 flex flex-row items-center justify-center lg:justify-start gap-x-8 gap-y-4 overflow-x-auto scrollbar-none snap-x w-full">
+            {/* ⚡ BARIS BENEFIT HORIZONTAL (Sekarang rapi di HP) ⚡ */}
+            <div className="pt-2 flex flex-row items-center justify-start lg:justify-start gap-4 overflow-x-auto scrollbar-none snap-x w-full px-2 sm:px-0 no-scrollbar">
               {[
                 {
                   title: "Proses Instan",
@@ -343,23 +343,23 @@ export default function Hero() {
                   icon: Wallet,
                 },
                 {
-                  title: "Aman & Terpercaya",
+                  title: "Aman Terpercaya",
                   desc: "100% transaksi aman",
                   icon: ShieldCheck,
                 },
               ].map((item, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-3 text-left shrink-0 snap-numerator"
+                  className="flex items-center gap-3 text-left shrink-0 snap-center bg-[#0e1628]/40 lg:bg-transparent p-3 lg:p-0 rounded-xl border border-white/5 lg:border-none"
                 >
-                  <div className="w-10 h-10 rounded-full bg-[#1A2438]/80 border border-white/5 flex items-center justify-center shrink-0 shadow-md">
-                    <item.icon size={15} className="text-blue-400" />
+                  <div className="w-9 h-9 rounded-full bg-[#1A2438]/80 border border-white/5 flex items-center justify-center shrink-0 shadow-md">
+                    <item.icon size={14} className="text-blue-400" />
                   </div>
                   <div className="leading-tight">
-                    <h3 className="font-bold text-[13px] xl:text-[14px] text-white tracking-wide">
+                    <h3 className="font-bold text-[12px] xl:text-[14px] text-white tracking-wide whitespace-nowrap">
                       {item.title}
                     </h3>
-                    <p className="text-[11px] text-gray-500 mt-0.5">
+                    <p className="text-[10px] text-gray-500 mt-0.5 whitespace-nowrap">
                       {item.desc}
                     </p>
                   </div>
@@ -371,11 +371,11 @@ export default function Hero() {
           {/* SISI KANAN: FORM TRANSAKSI */}
           <div
             id="transaction-form"
-            className="lg:col-span-5 flex justify-center lg:justify-end w-full z-10 scroll-mt-12"
+            className="lg:col-span-5 flex justify-center lg:justify-end w-full z-10 scroll-mt-24"
           >
-            <div className="w-full max-w-[500px] bg-[#0E1628]/85 border border-white/10 rounded-[22px] sm:rounded-[28px] p-5 sm:p-7 backdrop-blur-xl shadow-2xl">
-              {/* TAB SELECTION */}
-              <div className="flex items-center justify-between border-b border-white/5 pb-2 sm:pb-3 mb-4 sm:mb-6 gap-2 overflow-x-auto scrollbar-none flex-nowrap">
+            <div className="w-full max-w-[500px] bg-[#0E1628]/85 border border-white/10 rounded-[22px] sm:rounded-[28px] p-4 sm:p-7 backdrop-blur-xl shadow-2xl box-border">
+              {/* TAB SELECTION (Ditambahkan flex-nowrap & overflow-x-auto murni agar tidak meluber di HP) */}
+              <div className="flex items-center border-b border-white/5 pb-2 sm:pb-3 mb-4 sm:mb-6 gap-4 overflow-x-auto scrollbar-none flex-nowrap no-scrollbar w-full">
                 {[
                   "Game",
                   "Pulsa",
@@ -391,10 +391,10 @@ export default function Hero() {
                     <button
                       key={item}
                       onClick={() => setActiveTab(item)}
-                      className="relative pb-2 shrink-0"
+                      className="relative pb-2 shrink-0 bg-transparent border-none outline-none cursor-pointer"
                     >
                       <span
-                        className={`text-[12px] sm:text-[11px] font-bold tracking-wide transition-colors whitespace-nowrap ${
+                        className={`text-[13px] sm:text-[11px] font-bold tracking-wide transition-colors whitespace-nowrap block ${
                           isActive
                             ? "text-[#FACC15]"
                             : "text-gray-500 hover:text-gray-400"
@@ -473,7 +473,7 @@ export default function Hero() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   {/* Input ID */}
                   <div className="space-y-1 sm:space-y-2">
-                    <label className="text-[11px] sm:text-[12px] font-bold text-gray-400 tracking-wide block">
+                    <label className="text-[11px] sm:text-[12px] font-bold text-gray-400 tracking-wide block truncate">
                       {getDynamicPlaceholder()}
                     </label>
                     <input
@@ -502,11 +502,11 @@ export default function Hero() {
                 <div className="flex gap-3 pt-1">
                   <button
                     onClick={handleOrderWhatsApp}
-                    className="flex-1 h-[46px] sm:h-[52px] rounded-xl sm:rounded-2xl bg-[#FACC15] text-black font-black text-[13px] hover:bg-[#EAB308] transition shadow-lg shadow-[#FACC15]/10 active:scale-[0.99]"
+                    className="flex-1 h-[46px] sm:h-[52px] rounded-xl sm:rounded-2xl bg-[#FACC15] text-black font-black text-[13px] hover:bg-[#EAB308] transition shadow-lg shadow-[#FACC15]/10 active:scale-[0.99] cursor-pointer"
                   >
                     Beli Sekarang
                   </button>
-                  <button className="w-[46px] h-[46px] sm:w-[52px] sm:h-[52px] rounded-xl sm:rounded-2xl bg-[#111C33] border border-white/5 flex items-center justify-center hover:border-[#FACC15]/20 transition group shrink-0">
+                  <button className="w-[46px] h-[46px] sm:w-[52px] sm:h-[52px] rounded-xl sm:rounded-2xl bg-[#111C33] border border-white/5 flex items-center justify-center hover:border-[#FACC15]/20 transition group shrink-0 cursor-pointer">
                     <Zap
                       className="text-[#FACC15] group-hover:scale-110 transition"
                       size={15}
@@ -520,8 +520,8 @@ export default function Hero() {
       </section>
 
       {/* LOWER SECTION: KATEGORI KARTU BAWAH */}
-      <section className="px-6 xl:px-16 pb-16 text-white bg-[#050B18]">
-        <div className="max-w-[1400px] mx-auto grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4">
+      <section className="px-4 sm:px-6 xl:px-16 pb-16 text-white bg-[#050B18] w-full">
+        <div className="max-w-[1400px] mx-auto grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3 sm:gap-4 w-full">
           {[
             {
               icon: Smartphone,

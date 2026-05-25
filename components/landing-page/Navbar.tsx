@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Search } from "lucide-react";
+import { Search, Menu, X } from "lucide-react"; // Ditambahkan Menu dan X untuk icon HP
 
 export default function Navbar() {
   const [activeMenu, setActiveMenu] = useState("Beranda");
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // State baru untuk menu HP
 
   const menuList = [
     "Beranda",
@@ -36,6 +37,7 @@ export default function Navbar() {
 
   const handleMenuClick = (menu: string) => {
     setActiveMenu(menu);
+    setIsMobileMenuOpen(false); // Tutup menu HP otomatis setelah klik menu
 
     // 🔥 LOGIKA KHUSUS 1: JIKA KLIK BERANDA
     if (menu === "Beranda") {
@@ -65,8 +67,10 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#050B18]/95 backdrop-blur-xl h-[78px] w-full">
-      <div className="max-w-7xl mx-auto px-4 h-full flex items-center justify-between gap-2">
+    <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#050B18]/95 backdrop-blur-xl w-full">
+      {/* Container Utama */}
+      <div className="max-w-7xl mx-auto px-4 h-[78px] flex items-center justify-between gap-2">
+        
         {/* LOGO */}
         <div className="flex items-center gap-2 shrink-0">
           <img src="/logo.png" alt="logo" className="w-8" />
@@ -76,7 +80,7 @@ export default function Navbar() {
           </h1>
         </div>
 
-        {/* BARISAN MENU */}
+        {/* BARISAN MENU (Hanya muncul di Desktop / xl) */}
         <div className="hidden xl:flex items-center gap-4 text-[13px] font-semibold whitespace-nowrap h-full pt-1">
           {menuList.map((menu) => {
             const isActive = activeMenu === menu;
@@ -92,14 +96,14 @@ export default function Navbar() {
               >
                 <span>{menu}</span>
                 {isActive && (
-                  <span className="absolute bottom-[18px] left-1/2 -translate-x-1/2 w-6 h-[3px] bg-yellow-400 rounded-full" />
+                  <span className="absolute bottom-[0px] left-1/2 -translate-x-1/2 w-6 h-[3px] bg-yellow-400 rounded-full" />
                 )}
               </button>
             );
           })}
         </div>
 
-        {/* SEARCH BAR */}
+        {/* SEARCH BAR (Hanya muncul di Desktop / xl) */}
         <div className="hidden xl:flex items-center justify-between w-[160px] h-[40px] bg-[#0E1628] border border-white/10 rounded-xl px-3 group focus-within:border-yellow-400/50 transition-all shrink-0">
           <input
             type="text"
@@ -114,6 +118,7 @@ export default function Navbar() {
 
         {/* TOMBOL AKSI */}
         <div className="flex items-center gap-2 shrink-0">
+          {/* Cek Transaksi disembunyikan di HP, diganti masuk ke dalam menu toggle */}
           <button className="hidden xl:flex h-[40px] px-3 items-center justify-center rounded-xl border border-white/10 hover:border-yellow-400 transition text-xs font-semibold text-white whitespace-nowrap">
             Cek Transaksi
           </button>
@@ -123,8 +128,60 @@ export default function Navbar() {
           <button className="h-[40px] px-4 rounded-xl bg-yellow-400 text-black font-black hover:opacity-90 transition text-xs whitespace-nowrap">
             Daftar
           </button>
+
+          {/* TOGGLE BUTTON FOR MOBILE (Muncul hanya di bawah ukuran layar xl) */}
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="xl:hidden flex h-[40px] w-[40px] items-center justify-center rounded-xl border border-white/10 text-white hover:border-yellow-400 transition"
+          >
+            {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
       </div>
+
+      {/* TAMPILAN MENU MOBILE DROPDOWN (Muncul jika tombol hamburger di-klik) */}
+      {isMobileMenuOpen && (
+        <div className="xl:hidden bg-[#050B18] border-b border-white/10 px-4 py-4 space-y-3 animate-fade-in">
+          {/* Search Bar Mobile */}
+          <div className="flex items-center justify-between w-full h-[40px] bg-[#0E1628] border border-white/10 rounded-xl px-3">
+            <input
+              type="text"
+              placeholder="Cari produk..."
+              className="bg-transparent outline-none text-xs w-full placeholder:text-gray-500 text-white pr-1"
+            />
+            <Search size={14} className="text-gray-500" />
+          </div>
+
+          <hr className="border-white/5" />
+
+          {/* List Menu Mobile */}
+          <div className="flex flex-col gap-1">
+            {menuList.map((menu) => {
+              const isActive = activeMenu === menu;
+              return (
+                <button
+                  key={menu}
+                  onClick={() => handleMenuClick(menu)}
+                  className={`w-full text-left py-2.5 px-3 rounded-lg text-sm font-semibold transition-colors ${
+                    isActive
+                      ? "bg-yellow-400/10 text-yellow-400"
+                      : "text-gray-300 hover:bg-white/5"
+                  }`}
+                >
+                  {menu}
+                </button>
+              );
+            })}
+          </div>
+
+          <hr className="border-white/5" />
+
+          {/* Tombol Cek Transaksi Mobile */}
+          <button className="w-full h-[40px] flex items-center justify-center rounded-xl border border-white/10 text-xs font-semibold text-white">
+            Cek Transaksi
+          </button>
+        </div>
+      )}
     </nav>
   );
 }
