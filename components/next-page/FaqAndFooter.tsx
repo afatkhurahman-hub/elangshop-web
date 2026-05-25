@@ -34,7 +34,7 @@ export default function FaqAndFooter() {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  // 🔥 Fungsi pembantu navigasi klik agar meluncur mulus ke target elemen di landing page
+  // 🔥 Fungsi pembantu navigasi klik diperbarui agar meluncur presisi dengan kompensasi Navbar Fixed
   const handleScrollTo = (idElement: string) => {
     if (idElement === "top") {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -42,12 +42,26 @@ export default function FaqAndFooter() {
     }
     const element = document.getElementById(idElement);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  // 🔥 Fungsi perubah Tab Kategori Form Utama saat menu produk di footer diklik
+  const handleProductMenuClick = (tabName: string) => {
+    // Kirim sinyal event global agar Hero/Form menangkap perubahan Tab Kategori aktif
+    const event = new CustomEvent("changeTabFromNavbar", { detail: tabName });
+    window.dispatchEvent(event);
+
+    // Gulirkan layar ke area Form Pengisian
+    const formElement = document.getElementById("transaction-form");
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   };
 
   return (
-    <section id="faq" className="px-6 pt-10 pb-6 bg-[#050B18] border-t border-white/10">
+    // Ditambahkan padding-top offset (scroll-mt-24) agar navigasi mendarat mulus di bawah Navbar
+    <section id="faq" className="px-6 pt-10 pb-6 bg-[#050B18] border-t border-white/10 scroll-mt-24">
       <div className="max-w-[1400px] mx-auto">
         {/* FAQ + HELP */}
         <div className="grid xl:grid-cols-[2fr_1fr] gap-6 mb-12">
@@ -135,15 +149,15 @@ export default function FaqAndFooter() {
               </div>
             </div>
 
-            {/* KOLOM PRODUK */}
+            {/* KOLOM PRODUK: Otomatis ganti tab form transaksi di atas */}
             <div>
               <h3 className="text-white font-bold text-[13px] mb-4">Produk</h3>
               <div className="space-y-3 text-gray-400 text-[11px]">
-                <p onClick={() => handleScrollTo("top")} className="hover:text-yellow-400 transition cursor-pointer">Top Up Game</p>
-                <p onClick={() => handleScrollTo("top")} className="hover:text-yellow-400 transition cursor-pointer">Pulsa & Data</p>
-                <p onClick={() => handleScrollTo("top")} className="hover:text-yellow-400 transition cursor-pointer">E-Wallet</p>
-                <p onClick={() => handleScrollTo("top")} className="hover:text-yellow-400 transition cursor-pointer">Aplikasi Premium</p>
-                <p onClick={() => handleScrollTo("top")} className="hover:text-yellow-400 transition cursor-pointer">Listrik PLN</p>
+                <p onClick={() => handleProductMenuClick("Top Up Game")} className="hover:text-yellow-400 transition cursor-pointer">Top Up Game</p>
+                <p onClick={() => handleProductMenuClick("Pulsa")} className="hover:text-yellow-400 transition cursor-pointer">Pulsa & Data</p>
+                <p onClick={() => handleProductMenuClick("E-Wallet")} className="hover:text-yellow-400 transition cursor-pointer">E-Wallet</p>
+                <p onClick={() => handleProductMenuClick("Premium")} className="hover:text-yellow-400 transition cursor-pointer">Aplikasi Premium</p>
+                <p onClick={() => handleProductMenuClick("Top Up Game")} className="hover:text-yellow-400 transition cursor-pointer">Listrik PLN</p>
               </div>
             </div>
 
@@ -151,10 +165,12 @@ export default function FaqAndFooter() {
             <div>
               <h3 className="text-white font-bold text-[13px] mb-4">Informasi</h3>
               <div className="space-y-3 text-gray-400 text-[11px]">
-                <a href="/about" className="block hover:text-yellow-400 transition cursor-pointer">Tentang Kami</a>
+                {/* Mengarah ke ID "why-choose-us" (Kenapa Memilih ElangShop) */}
+                <p onClick={() => handleScrollTo("why-choose-us")} className="hover:text-yellow-400 transition cursor-pointer">Tentang Kami</p>
                 <p onClick={() => handleScrollTo("how-to-topup")} className="hover:text-yellow-400 transition cursor-pointer">Cara Top Up</p>
-                <a href="/terms" className="block hover:text-yellow-400 transition cursor-pointer">Syarat & Ketentuan</a>
-                <a href="/privacy" className="block hover:text-yellow-400 transition cursor-pointer">Kebijakan Privasi</a>
+                {/* Kosongkan rute sementara menggunakan #, link teks tidak rusak */}
+                <a href="#" onClick={(e) => e.preventDefault()} className="block text-gray-600 cursor-not-allowed select-none">Syarat & Ketentuan</a>
+                <a href="#" onClick={(e) => e.preventDefault()} className="block text-gray-600 cursor-not-allowed select-none">Kebijakan Privasi</a>
               </div>
             </div>
 
@@ -163,8 +179,9 @@ export default function FaqAndFooter() {
               <h3 className="text-white font-bold text-[13px] mb-4">Bantuan</h3>
               <div className="space-y-3 text-gray-400 text-[11px]">
                 <p onClick={() => handleScrollTo("faq")} className="hover:text-yellow-400 transition cursor-pointer">FAQ</p>
-                <a href="https://wa.me/6281931194133" target="_blank" rel="noopener noreferrer" className="block hover:text-yellow-400 transition">Hubungi Kami</a>
-                <a href="/check-transaction" className="block hover:text-yellow-400 transition cursor-pointer">Cek Transaksi</a>
+                <a href="https://wa.me/6281931194133?text=Halo%20MinEls%2C%20saya%20butuh%20bantuan" target="_blank" rel="noopener noreferrer" className="block hover:text-yellow-400 transition">Hubungi Kami</a>
+                {/* Kosongkan rute transaksi sementara */}
+                <a href="#" onClick={(e) => e.preventDefault()} className="block text-gray-600 cursor-not-allowed select-none">Cek Transaksi</a>
               </div>
             </div>
 

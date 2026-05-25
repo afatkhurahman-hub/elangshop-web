@@ -15,14 +15,17 @@ import {
 import { productsData } from "./productsData";
 
 export default function Hero() {
-  const [activeTab, setActiveTab] = useState("Top Up Game");
+  const [activeTab, setActiveTab] = useState("Game");
   const [selectedProduct, setSelectedProduct] = useState("");
   const [selectedItem, setSelectedItem] = useState("");
   const [currentPrice, setCurrentPrice] = useState("Rp 0");
 
-  const currentConfig =
-    productsData[activeTab as keyof typeof productsData] ||
-    productsData["Top Up Game"];
+  // Cari key asli di productsData yang cocok tanpa sensitif huruf besar/kecil
+  const matchedKey = Object.keys(productsData).find(
+    (k) => k.toLowerCase() === activeTab.toLowerCase()
+  ) || "Game";
+
+  const currentConfig = productsData[matchedKey as keyof typeof productsData];
 
   // =========================================================================
   // 🔥 EFEK MENANGKAP KLIK PRODUK POPULER (CUSTOM EVENT GLOBAL)
@@ -68,12 +71,15 @@ export default function Hero() {
 
   // Reset otomatis pilihan produk saat Tab Kategori berganti
   useEffect(() => {
-    // Jika produk yang dipilih tidak ada di dalam tab saat ini, baru kita set ke indeks pertama [0]
-    // Ini menjaga agar sinkronisasi dari efek global di atas tidak langsung tertimpa ke indeks pertama
-    if (currentConfig?.products && !currentConfig.products.includes(selectedProduct)) {
+    if (
+      currentConfig?.products &&
+      !currentConfig.products.includes(selectedProduct)
+    ) {
       if (currentConfig.products.length > 0) {
         setSelectedProduct(currentConfig.products[0]);
       }
+    } else if (!currentConfig?.products) {
+      setSelectedProduct("");
     }
   }, [activeTab, currentConfig, selectedProduct]);
 
@@ -89,6 +95,9 @@ export default function Hero() {
         setSelectedItem("");
         setCurrentPrice("Rp 0");
       }
+    } else {
+      setSelectedItem("");
+      setCurrentPrice("Rp 0");
     }
   }, [selectedProduct, activeTab, currentConfig]);
 
@@ -97,7 +106,7 @@ export default function Hero() {
     const itemName = e.target.value;
     setSelectedItem(itemName);
 
-    const availableItems = (currentConfig.items as any)[selectedProduct] || [];
+    const availableItems = (currentConfig?.items as any)?.[selectedProduct] || [];
     if (Array.isArray(availableItems)) {
       const matched = availableItems.find((i: any) => i.label === itemName);
       if (matched) {
@@ -106,25 +115,57 @@ export default function Hero() {
     }
   };
 
-  const currentItems = (currentConfig.items as any)[selectedProduct] || [];
+  const currentItems = (currentConfig?.items as any)?.[selectedProduct] || [];
+
+  // LOGIKA DINAMIS UNTUK TEMPAT TEXT INPUT ID (SINKRON DATA BARU & SEMUA TAB)
+  const getDynamicPlaceholder = () => {
+    const config = currentConfig as any;
+    const tab = activeTab.toLowerCase();
+
+    // 1. Kondisi khusus untuk Tab Game
+    if (tab.includes("game")) {
+      if (config?.placeholders) {
+        return config.placeholders[selectedProduct] || "Masukkan ID";
+      }
+      return config?.inputPlaceholder || "Masukkan ID";
+    }
+
+    // 2. Kondisi otomatis untuk Tab Pulsa & Paket Data
+    if (tab.includes("pulsa") || tab.includes("data") || tab.includes("internet")) {
+      return "Masukkan No HP";
+    }
+
+    // 3. Kondisi otomatis untuk Tab E-Wallet
+    if (tab.includes("wallet") || tab.includes("dompet")) {
+      return "Masukkan No Akun / HP";
+    }
+
+    // 4. Kondisi otomatis untuk Tab Premium
+    if (tab.includes("premium")) {
+      return "Masukkan Email Akun";
+    }
+
+    // Cadangan jika tidak ada yang cocok
+    return config?.inputPlaceholder || "Masukkan ID";
+  };
 
   return (
     <>
-      {/* SECTION CONTAINER Utuh dengan background gelap asli */}
-      <section className="relative px-6 xl:px-10 pt-10 pb-12 overflow-hidden text-white bg-[#050B18]">
-        {/* 🦅 MASKOT ELANG RAKSASA (ABSOLUTE DI BELAKANG KONTEN) 🦅 */}
-        <div className="absolute top-1/2 left-[45%] -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none select-none mix-blend-screen opacity-90">
+      {/* SECTION CONTAINER Utuh - Ditambahkan responsive padding untuk kenyamanan HP */}
+      <section className="relative px-4 sm:px-6 xl:px-10 pt-24 pb-12 overflow-hidden text-white bg-[#050B18]">
+        {/* 🦅 MASKOT ELANG RAKSASA (Dibuat adaptif agar tidak menabrak / merusak layout HP) 🦅 */}
+        <div className="absolute top-[40%] lg:top-1/2 left-1/2 lg:left-[45%] -translate-x-1/2 -translate-y-1/2 z-0 pointer-events-none select-none mix-blend-screen opacity-20 lg:opacity-90 transition-opacity duration-300">
           <img
             src="/hero-banner.png"
             alt="Elang Megah"
-            className="w-[500px] md:w-[600px] lg:w-[650px] xl:w-[500px] h-auto object-contain max-w-none"
+            className="w-[320px] sm:w-[450px] md:w-[600px] lg:w-[650px] xl:w-[500px] h-auto object-contain max-w-none"
           />
         </div>
 
         {/* UTILITY LAYOUT GRID (Bungkus Konten Utama di Atas Elang) */}
         <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
-          {/* LEFT CONTENT */}
-          <div className="lg:col-span-7 space-y-7 pr-4">
+          {/* LEFT CONTENT - Perubahan teks agar center saat di HP dan rata kiri saat desktop */}
+          <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
             {/* BADGE */}
             <div className="inline-flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 px-4 py-2 rounded-full">
               <Zap size={14} className="text-blue-400 fill-blue-400/20" />
@@ -134,7 +175,7 @@ export default function Hero() {
             </div>
 
             {/* TEXT MAIN */}
-            <h1 className="text-[43px] xl:text-[40px] leading-[1.00] font-black tracking-tight drop-shadow-md">
+            <h1 className="text-[32px] sm:text-[40px] xl:text-[40px] leading-[1.1] lg:leading-[1.00] font-black tracking-tight drop-shadow-md">
               Top Up Cepat,
               <br />
               <span className="text-[#FACC15]">Harga Hemat,</span>
@@ -142,13 +183,13 @@ export default function Hero() {
               <span className="text-white">Transaksi Anti Ribet!</span>
             </h1>
 
-            <p className="text-gray-400 text-[15px] xl:text-[14px] leading-relaxed max-w-[480px]">
+            <p className="text-gray-400 text-[14px] leading-relaxed max-w-[480px] mx-auto lg:mx-0">
               Top up game, pulsa, e-wallet, dan aplikasi premium dengan
               pembayaran QRIS & proses instan.
             </p>
 
             {/* INFO BANNER HORIZONTAL */}
-            <div className="pt-3 flex flex-row flex-wrap items-center gap-x-8 gap-y-4 text-white">
+            <div className="pt-3 flex flex-row flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-4 text-white">
               {[
                 {
                   title: "Proses Instan",
@@ -166,14 +207,12 @@ export default function Hero() {
                   icon: ShieldCheck,
                 },
               ].map((item, index) => (
-                <div key={index} className="flex items-center gap-3">
+                <div key={index} className="flex items-center gap-3 text-left">
                   <div className="w-10 h-10 rounded-full bg-[#1A2438]/60 border border-white/5 flex items-center justify-center shrink-0">
                     <item.icon size={16} className="text-blue-400" />
                   </div>
                   <div className="whitespace-nowrap">
-                    <h3 className="font-bold text-[13px] xl:text-[14px]">
-                      {item.title}
-                    </h3>
+                    <h3 className="font-bold text-[13px]">{item.title}</h3>
                     <p className="text-[11px] text-gray-500">{item.desc}</p>
                   </div>
                 </div>
@@ -182,34 +221,35 @@ export default function Hero() {
           </div>
 
           {/* RIGHT SIDE: TRANSACTION FORM */}
-          <div className="lg:col-span-5 flex justify-center lg:justify-end">
-            <div className="w-full max-w-[540px] bg-[#0E1628]/85 border border-white/10 rounded-[28px] p-6 backdrop-blur-xl shadow-2xl">
+          <div className="lg:col-span-5 flex justify-center lg:justify-end w-full">
+            <div className="w-full max-w-[540px] bg-[#0E1628]/90 border border-white/10 rounded-[28px] p-5 sm:p-6 backdrop-blur-xl shadow-2xl">
               {/* TAB SELECTION */}
               <div className="flex items-center justify-between border-b border-white/5 pb-3 mb-6 gap-2 overflow-x-auto scrollbar-none">
-                {[
-                  "Top Up Game",
-                  "Pulsa",
-                  "Paket Data",
-                  "E-Wallet",
-                  "Premium",
-                ].map((item) => (
-                  <button
-                    key={item}
-                    onClick={() => setActiveTab(item)}
-                    className="relative pb-2 shrink-0"
-                  >
-                    <span
-                      className={`text-[11px] font-bold tracking-wide transition-colors ${
-                        activeTab === item ? "text-[#FACC15]" : "text-gray-500 hover:text-gray-400"
-                      }`}
-                    >
-                      {item}
-                    </span>
-                    {activeTab === item && (
-                      <div className="absolute bottom-0 left-0 w-full h-[2px] bg-[#FACC15] rounded-full shadow-[0_0_8px_#FACC15]" />
-                    )}
-                  </button>
-                ))}
+                {["Game", "Pulsa", "Paket Data", "E-Wallet", "Premium"].map(
+                  (item) => {
+                    const isActive = activeTab.toLowerCase() === item.toLowerCase();
+                    return (
+                      <button
+                        key={item}
+                        onClick={() => setActiveTab(item)}
+                        className="relative pb-2 shrink-0"
+                      >
+                        <span
+                          className={`text-[11px] font-bold tracking-wide transition-colors ${
+                            isActive
+                              ? "text-[#FACC15]"
+                              : "text-gray-500 hover:text-gray-400"
+                          }`}
+                        >
+                          {item}
+                        </span>
+                        {isActive && (
+                          <div className="absolute bottom-0 left-0 w-full h-[2px] bg-[#FACC15] rounded-full shadow-[0_0_8px_#FACC15]" />
+                        )}
+                      </button>
+                    );
+                  }
+                )}
               </div>
 
               {/* INPUT FIELDS - DINAMIS */}
@@ -219,7 +259,15 @@ export default function Hero() {
                   {/* Dropdown 1: Nama Produk Utama */}
                   <div className="space-y-2">
                     <label className="text-[12px] font-bold text-gray-400 tracking-wide block">
-                      {activeTab === "Premium" ? "Pilih Aplikasi" : "Pilih Game"}
+                      {(() => {
+                        const tab = activeTab.toLowerCase();
+                        if (tab.includes("premium")) return "Pilih Aplikasi";
+                        if (tab.includes("pulsa") || tab.includes("data") || tab.includes("internet"))
+                          return "Pilih Operator";
+                        if (tab.includes("wallet") || tab.includes("dompet"))
+                          return "Pilih E-Wallet";
+                        return "Pilih Game";
+                      })()}
                     </label>
                     <select
                       value={selectedProduct}
@@ -238,10 +286,16 @@ export default function Hero() {
                     </select>
                   </div>
 
-                  {/* Dropdown 2: Pilihan Nominal */}
+                  {/* Dropdown 2: Pilihan Nominal Dinamis */}
                   <div className="space-y-2">
                     <label className="text-[12px] font-bold text-gray-400 tracking-wide block">
-                      Pilih Nominal
+                      {(() => {
+                        const tab = activeTab.toLowerCase();
+                        if (tab.includes("pulsa")) return "Pilih Pulsa";
+                        if (tab.includes("data") || tab.includes("internet"))
+                          return "Pilih Paket";
+                        return "Pilih Nominal";
+                      })()}
                     </label>
                     <select
                       value={selectedItem}
@@ -262,18 +316,16 @@ export default function Hero() {
                   </div>
                 </div>
 
-                {/* BARIS 2: USER ID & HARGA HASIL SINKRONISASI */}
+                {/* BARIS 2: USER ID / NO HP & HARGA HASIL SINKRONISASI */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* Input Text Field */}
+                  {/* Input Text Field Dinamis */}
                   <div className="space-y-2">
                     <label className="text-[12px] font-bold text-gray-400 tracking-wide block">
-                      {currentConfig?.inputPlaceholder || "Masukkan ID"}
+                      {getDynamicPlaceholder()}
                     </label>
                     <input
                       type={currentConfig?.inputType || "text"}
-                      placeholder={
-                        currentConfig?.inputPlaceholder || "Masukkan ID"
-                      }
+                      placeholder={getDynamicPlaceholder()}
                       className="w-full h-[52px] bg-[#111C33] border border-white/5 rounded-2xl px-4 text-[13px] outline-none placeholder:text-gray-500 text-white focus:border-[#FACC15]/30"
                     />
                   </div>

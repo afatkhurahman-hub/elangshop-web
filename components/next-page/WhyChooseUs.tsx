@@ -13,7 +13,8 @@ const reasons = [
 
 export default function WhyChooseUs() {
   return (
-    <section className="px-6 py-10 bg-[#081120]">
+    // 🔥 Ditambahkan id="why-choose-us" dan scroll-mt-24 di sini
+    <section id="why-choose-us" className="scroll-mt-24 px-6 py-10 bg-[#081120]">
       <div className="max-w-[1400px] mx-auto">
         <h2 className="text-[30px] font-black text-white text-center mb-8">
           Kenapa Memilih ElangShop?

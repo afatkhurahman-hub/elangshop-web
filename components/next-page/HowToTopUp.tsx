@@ -11,7 +11,8 @@ const steps = [
 
 export default function HowToTopUp() {
   return (
-    <section className="px-6 py-10 bg-[#081120]">
+    // 🔥 Ditambahkan id="how-to-topup" dan scroll-mt-24 di sini
+    <section id="how-to-topup" className="scroll-mt-24 px-6 py-10 bg-[#081120]">
       <div className="max-w-[1400px] mx-auto">
         <div className="flex items-center justify-center gap-4 mb-8">
           <img src="/logo.png" alt="logo" className="w-10" />
