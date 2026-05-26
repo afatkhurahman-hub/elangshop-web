@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 
+// ==========================================
+// DATA JALUR TABEL (DIPISAH SENDIRI-SENDIRI)
+// ==========================================
+
 const faqs = [
   "Metode pembayaran apa saja yang tersedia?",
   "Kenapa transaksi saya pending?",
@@ -9,13 +13,22 @@ const faqs = [
   "Jam berapa customer service aktif?",
 ];
 
-// Hubungkan jawaban sesuai urutan index faqs di atas
 const faqAnswers = [
   "Kami menyediakan berbagai metode pembayaran lengkap mulai dari QRIS (Dana, OVO, GoPay, ShopeePay), Transfer Bank (BCA, Mandiri, BNI, BRI), hingga Virtual Account yang diproses otomatis 24 jam.",
   "Transaksi pending biasanya terjadi karena adanya antrean sistem pada provider game atau gangguan pada mutasi e-wallet/bank. Silakan tunggu 5-10 menit atau hubungi CS WhatsApp jika belum masuk.",
   "Tentu saja! Jika sistem kami gagal memproses pesanan Anda karena kesalahan teknis, saldo atau uang Anda akan dikembalikan 100% tanpa potongan.",
   "Customer Service ElangShop aktif dan siap membantu kamu setiap hari selama 24 jam non-stop (24/7)!",
 ];
+
+const syaratKetentuan = {
+  title: "⚖️ Syarat & Ketentuan Penggunaan",
+  content: "Dengan bertransaksi di ElangShop, pembeli dianggap telah membaca, memahami, dan menyetujui semua aturan yang berlaku. Layanan ElangShop terbuka untuk umum, namun pastikan Anda menggunakan metode pembayaran milik sendiri atau atas izin orang tua.\n\n⚠️ Penting Sebelum Melakukan Transaksi! ⚠️\nPastikan ID Game, Server, atau Nomor HP sudah benar. Kesalahan input data adalah tanggung jawab pembeli. Setelah pengisian data selesai nanti akan muncul pop-up pengecekan. Klik Tidak jika ada yang salah ketik, klik Ya jika semua sudah benar. Semua produk digital yang sudah sukses diproses tidak bisa dibatalkan atau dikembalikan uangnya."
+};
+
+const kebijakanPrivasi = {
+  title: "🔒 Kebijakan Privasi Data Pengguna",
+  content: "ElangShop berkomitmen penuh untuk menjaga keamanan privasi data diri Pembeli, Informasi transaksi seperti Nomor HP, ID Game, dan data riwayat pembelian Anda hanya digunakan secara internal untuk pelacakan terhadap status pemesanan serta riwayat kami tidak akan pernah membagikan data kepada pihak ketiga."
+};
 
 const socials = [
   { name: "ig", link: "https://instagram.com/elang.shopku" },
@@ -27,32 +40,34 @@ const socials = [
 const payments = ["qrisz", "bca", "mandiri", "bni", "dana", "ovo", "gopay", "shoppepay"];
 
 export default function FaqAndFooter() {
-  // State untuk menyimpan index FAQ yang sedang terbuka (null berarti semua tertutup)
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [openSyarat, setOpenSyarat] = useState(false);
+  const [openPrivasi, setOpenPrivasi] = useState(false);
 
   const toggleFaq = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
-  // 🔥 Fungsi pembantu navigasi klik diperbarui agar meluncur presisi dengan kompensasi Navbar Fixed
-  const handleScrollTo = (idElement: string) => {
+  const handleScrollToElement = (idElement: string, action?: () => void) => {
     if (idElement === "top") {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-    const element = document.getElementById(idElement);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    
+    if (action) action();
+
+    setTimeout(() => {
+      const element = document.getElementById(idElement);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }, 120);
   };
 
-  // 🔥 Fungsi perubah Tab Kategori Form Utama saat menu produk di footer diklik
   const handleProductMenuClick = (tabName: string) => {
-    // Kirim sinyal event global agar Hero/Form menangkap perubahan Tab Kategori aktif
     const event = new CustomEvent("changeTabFromNavbar", { detail: tabName });
     window.dispatchEvent(event);
 
-    // Gulirkan layar ke area Form Pengisian
     const formElement = document.getElementById("transaction-form");
     if (formElement) {
       formElement.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -60,79 +75,150 @@ export default function FaqAndFooter() {
   };
 
   return (
-    // Ditambahkan padding-top offset (scroll-mt-24) agar navigasi mendarat mulus di bawah Navbar
-    <section id="faq" className="px-6 pt-10 pb-6 bg-[#050B18] border-t border-white/10 scroll-mt-24">
+    <section id="faq-section" className="px-6 pt-10 pb-6 bg-[#050B18] border-t border-white/10 scroll-mt-24">
       <div className="max-w-[1400px] mx-auto">
-        {/* FAQ + HELP */}
-        <div className="grid xl:grid-cols-[2fr_1fr] gap-6 mb-12">
-          <div className="bg-[#091426] border border-[#17304F] rounded-[24px] p-6">
-            <h2 className="text-[28px] font-black mb-6 text-white">Pertanyaan yang Sering Diajukan</h2>
-            <div className="space-y-3">
-              {faqs.map((item, index) => {
-                const isOpen = openIndex === index;
-                return (
-                  <div 
-                    key={index} 
-                    className="bg-[#0B172B] border border-white/10 rounded-[16px] overflow-hidden transition-all duration-300"
-                  >
-                    {/* Baris Utama yang Bisa Diklik */}
+        
+        {/* GRID PERTAMA: FAQ UTAMA DAN BANNER WHATSAPP (items-stretch membuat tinggi kanan & kiri otomatis sama rata) */}
+        <div className="grid xl:grid-cols-[2fr_1fr] gap-6 items-stretch">
+          
+          {/* BOX FAQ UTAMA (KIRI) */}
+          <div className="bg-[#091426] border border-[#17304F] rounded-[24px] p-6 flex flex-col justify-between">
+            <div>
+              <h2 className="text-[28px] font-black mb-6 text-white">Pertanyaan yang Sering Diajukan</h2>
+              <div className="space-y-3">
+                {faqs.map((item, index) => {
+                  const isOpen = openIndex === index;
+                  return (
                     <div 
-                      onClick={() => toggleFaq(index)}
-                      className={`px-5 h-[60px] flex items-center justify-between cursor-pointer select-none transition-colors ${
-                        isOpen ? "bg-white/5" : "hover:bg-white/[0.02]"
-                      }`}
+                      key={index} 
+                      className="bg-[#0B172B] border border-white/10 rounded-[16px] overflow-hidden transition-all duration-300"
                     >
-                      <span className={`text-[14px] font-medium transition-colors ${isOpen ? "text-yellow-400" : "text-gray-200"}`}>
-                        {item}
-                      </span>
-                      {/* Animasi rotasi panah v */}
-                      <span className={`text-gray-400 text-xl font-bold transform transition-transform duration-300 ${isOpen ? "rotate-180 text-yellow-400" : ""}`}>
-                        ⌄
-                      </span>
-                    </div>
+                      <div 
+                        onClick={() => toggleFaq(index)}
+                        className={`px-5 h-[60px] flex items-center justify-between cursor-pointer select-none transition-colors ${
+                          isOpen ? "bg-white/5" : "hover:bg-white/[0.02]"
+                        }`}
+                      >
+                        <span className={`text-[14px] font-medium transition-colors ${isOpen ? "text-yellow-400" : "text-gray-200"}`}>
+                          {item}
+                        </span>
+                        <span className={`text-gray-400 text-xl font-bold transform transition-transform duration-300 ${isOpen ? "rotate-180 text-yellow-400" : ""}`}>
+                          ⌄
+                        </span>
+                      </div>
 
-                    {/* Area Jawaban dengan Efek Slide Mulus */}
-                    <div 
-                      className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                        isOpen ? "max-h-[200px] border-t border-white/5" : "max-h-0"
-                      }`}
-                    >
-                      <div className="px-5 py-4 text-[13px] text-gray-400 leading-relaxed">
-                        {faqAnswers[index]}
+                      <div 
+                        className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                          isOpen ? "max-h-[200px] border-t border-white/5" : "max-h-0"
+                        }`}
+                      >
+                        <div className="px-5 py-4 text-[13px] text-gray-400 leading-relaxed">
+                          {faqAnswers[index]}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </div>
 
-          <div className="relative overflow-hidden rounded-[28px] border border-yellow-400/30 bg-gradient-to-br from-[#061530] via-[#0B1322] to-[#1B1B1B] p-7 min-h-[290px]">
+          {/* BANNER WHATSAPP (KANAN) - SEKARANG NGEPASIN TINGGI KIRI SECARA OTOMATIS */}
+          <div className="relative overflow-hidden rounded-[28px] border border-yellow-400/30 bg-gradient-to-br from-[#061530] via-[#0B1322] to-[#1B1B1B] p-7 flex flex-col justify-between h-full min-h-[290px]">
             <div className="absolute right-[-60px] top-[-50px] w-[280px] h-[280px] rounded-full bg-yellow-400/20 blur-[120px]" />
             <div className="absolute right-0 top-0 h-full w-[45%] bg-gradient-to-l from-yellow-400/10 to-transparent" />
-            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between h-full gap-2">
-              <div className="max-w-[320px]">
-                <h3 className="flex flex-col leading-[1.08] font-bold">
-                  <span className="text-[26px] text-yellow-400 tracking-[-0.5px]">Butuh Bantuan?</span>
-                  <span className="mt-2 text-[26px] text-yellow-400 tracking-[-0.5px]">Hubungi CS Kami</span>
-                </h3>
-                <p className="mt-4 max-w-[260px] text-[14px] leading-[1.8] text-gray-400">Kami siap membantu 24/7 kapanpun kamu butuh.</p>
-                <a href="https://wa.me/6281931194133?text=Halo%20MinEls%2C%20saya%20butuh%20bantuan" target="_blank" rel="noopener noreferrer" className="mt-8 flex h-[50px] w-[210px] items-center justify-center gap-3 rounded-2xl border border-yellow-400/40 bg-[#0B1528]/80 backdrop-blur-xl font-semibold transition-all duration-300 hover:bg-yellow-400 hover:text-black active:scale-95 inline-flex text-white">
-                  <img src="/waa.png" alt="wa" className="h-7 w-7 object-contain" /> Chat WhatsApp
-                </a>
+            
+            <div className="relative z-10 flex flex-col md:flex-row items-center justify-between h-full w-full gap-4">
+              <div className="max-w-[320px] flex flex-col justify-between h-full py-1">
+                <div>
+                  <h3 className="flex flex-col leading-[1.08] font-bold">
+                    <span className="text-[26px] text-yellow-400 tracking-[-0.5px]">Butuh Bantuan?</span>
+                    <span className="mt-2 text-[26px] text-yellow-400 tracking-[-0.5px]">Hubungi CS Kami</span>
+                  </h3>
+                  <p className="mt-4 max-w-[260px] text-[14px] leading-[1.8] text-gray-400">Kami siap membantu 24/7 kapanpun kamu butuh.</p>
+                </div>
+                <div>
+                  <a href="https://wa.me/6281931194133?text=Halo%20MinEls%2C%20saya%20butuh%20bantuan" target="_blank" rel="noopener noreferrer" className="mt-6 flex h-[50px] w-[210px] items-center justify-center gap-3 rounded-2xl border border-yellow-400/40 bg-[#0B1528]/80 backdrop-blur-xl font-semibold transition-all duration-300 hover:bg-yellow-400 hover:text-black active:scale-95 inline-flex text-white">
+                    <img src="/waa.png" alt="wa" className="h-7 w-7 object-contain" /> Chat WhatsApp
+                  </a>
+                </div>
               </div>
-              <div className="relative flex items-center justify-center pr-2">
+              <div className="relative flex items-center justify-center pr-2 self-center md:self-end">
                 <img src="/cal.png" alt="cs" className="w-[190px] object-contain mix-blend-screen brightness-110" />
               </div>
             </div>
           </div>
+
+        </div>
+
+        {/* AREA BARU: MENTOK FULL SATU BARIS KE KANAN (DI BAWAH GRID) */}
+        <div className="mt-6 space-y-4 w-full">
+          
+          {/* TABEL FULL BARIS: SYARAT & KETENTUAN */}
+          <div 
+            id="tabel-syarat"
+            className="w-full bg-[#091426] border border-[#17304F] rounded-[24px] p-1 overflow-hidden transition-all duration-300"
+          >
+            <div 
+              onClick={() => setOpenSyarat(!openSyarat)}
+              className={`px-5 h-[64px] flex items-center justify-between cursor-pointer select-none transition-colors rounded-[20px] ${
+                openSyarat ? "bg-white/5" : "hover:bg-white/[0.02]"
+              }`}
+            >
+              <span className={`text-[14px] font-bold transition-colors ${openSyarat ? "text-yellow-400" : "text-gray-200"}`}>
+                {syaratKetentuan.title}
+              </span>
+              <span className={`text-gray-400 text-xl font-bold transform transition-transform duration-300 ${openSyarat ? "rotate-180 text-yellow-400" : ""}`}>
+                ⌄
+              </span>
+            </div>
+            <div 
+              className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                openSyarat ? "max-h-[250px] border-t border-white/5" : "max-h-0"
+              }`}
+            >
+              <div className="px-6 py-5 text-[13px] text-gray-400 leading-relaxed bg-[#0B172B]">
+                {syaratKetentuan.content}
+              </div>
+            </div>
+          </div>
+
+          {/* TABEL FULL BARIS: KEBIJAKAN PRIVASI */}
+          <div 
+            id="tabel-privasi"
+            className="w-full bg-[#091426] border border-[#17304F] rounded-[24px] p-1 overflow-hidden transition-all duration-300"
+          >
+            <div 
+              onClick={() => setOpenPrivasi(!openPrivasi)}
+              className={`px-5 h-[64px] flex items-center justify-between cursor-pointer select-none transition-colors rounded-[20px] ${
+                openPrivasi ? "bg-white/5" : "hover:bg-white/[0.02]"
+              }`}
+            >
+              <span className={`text-[14px] font-bold transition-colors ${openPrivasi ? "text-yellow-400" : "text-gray-200"}`}>
+                {kebijakanPrivasi.title}
+              </span>
+              <span className={`text-gray-400 text-xl font-bold transform transition-transform duration-300 ${openPrivasi ? "rotate-180 text-yellow-400" : ""}`}>
+                ⌄
+              </span>
+            </div>
+            <div 
+              className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                openPrivasi ? "max-h-[250px] border-t border-white/5" : "max-h-0"
+              }`}
+            >
+              <div className="px-6 py-5 text-[13px] text-gray-400 leading-relaxed bg-[#0B172B]">
+                {kebijakanPrivasi.content}
+              </div>
+            </div>
+          </div>
+
         </div>
 
         {/* FOOTER */}
-        <div className="mt-10 pt-8 border-t border-white/10">
+        <div className="mt-12 pt-8 border-t border-white/10">
           <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
             <div className="col-span-2 md:col-span-1">
-              <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleScrollTo("top")}>
+              <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleScrollToElement("top")}>
                 <img src="/logo.png" alt="logo" className="w-8" />
                 <h1 className="text-[16px] font-black leading-none"><span className="text-white">ELANG</span><span className="text-yellow-400">SHOP</span></h1>
               </div>
@@ -149,7 +235,7 @@ export default function FaqAndFooter() {
               </div>
             </div>
 
-            {/* KOLOM PRODUK: Otomatis ganti tab form transaksi di atas */}
+            {/* SEKTOR PRODUK */}
             <div>
               <h3 className="text-white font-bold text-[13px] mb-4">Produk</h3>
               <div className="space-y-3 text-gray-400 text-[11px]">
@@ -161,27 +247,24 @@ export default function FaqAndFooter() {
               </div>
             </div>
 
-            {/* KOLOM INFORMASI */}
+            {/* SEKTOR INFORMASI */}
             <div>
               <h3 className="text-white font-bold text-[13px] mb-4">Informasi</h3>
               <div className="space-y-3 text-gray-400 text-[11px]">
-                {/* Mengarah ke ID "why-choose-us" (Kenapa Memilih ElangShop) */}
-                <p onClick={() => handleScrollTo("why-choose-us")} className="hover:text-yellow-400 transition cursor-pointer">Tentang Kami</p>
-                <p onClick={() => handleScrollTo("how-to-topup")} className="hover:text-yellow-400 transition cursor-pointer">Cara Top Up</p>
-                {/* Kosongkan rute sementara menggunakan #, link teks tidak rusak */}
-                <a href="#" onClick={(e) => e.preventDefault()} className="block text-gray-600 cursor-not-allowed select-none">Syarat & Ketentuan</a>
-                <a href="#" onClick={(e) => e.preventDefault()} className="block text-gray-600 cursor-not-allowed select-none">Kebijakan Privasi</a>
+                <p onClick={() => handleScrollToElement("why-choose-us")} className="hover:text-yellow-400 transition cursor-pointer">Tentang Kami</p>
+                <p onClick={() => handleScrollToElement("how-to-topup")} className="hover:text-yellow-400 transition cursor-pointer">Cara Top Up</p>
+                <p onClick={() => handleScrollToElement("tabel-syarat", () => setOpenSyarat(true))} className="hover:text-yellow-400 transition cursor-pointer">Syarat & Ketentuan</p>
+                <p onClick={() => handleScrollToElement("tabel-privasi", () => setOpenPrivasi(true))} className="hover:text-yellow-400 transition cursor-pointer">Kebijakan Privasi</p>
               </div>
             </div>
 
-            {/* KOLOM BANTUAN */}
+            {/* SEKTOR BANTUAN */}
             <div>
               <h3 className="text-white font-bold text-[13px] mb-4">Bantuan</h3>
               <div className="space-y-3 text-gray-400 text-[11px]">
-                <p onClick={() => handleScrollTo("faq")} className="hover:text-yellow-400 transition cursor-pointer">FAQ</p>
+                <p onClick={() => handleScrollToElement("faq-section")} className="hover:text-yellow-400 transition cursor-pointer">FAQ</p>
                 <a href="https://wa.me/6281931194133?text=Halo%20MinEls%2C%20saya%20butuh%20bantuan" target="_blank" rel="noopener noreferrer" className="block hover:text-yellow-400 transition">Hubungi Kami</a>
-                {/* Kosongkan rute transaksi sementara */}
-                <a href="#" onClick={(e) => e.preventDefault()} className="block text-gray-600 cursor-not-allowed select-none">Cek Transaksi</a>
+                <p onClick={() => handleScrollToElement("tabel-syarat", () => setOpenSyarat(true))} className="hover:text-yellow-400 transition cursor-pointer">Cek Transaksi</p>
               </div>
             </div>
 

@@ -66,9 +66,8 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 border-b border-white/10 bg-[#050B18]/95 backdrop-blur-xl w-full">
       {/* Container Utama - Menyesuaikan tinggi sedikit di HP agar proporsional */}
       <div className="max-w-7xl mx-auto px-4 h-[70px] xl:h-[78px] flex items-center justify-between gap-3">
-        
         {/* ========================== LOGO (BISA DIKLIK BALIK BERANDA) ========================== */}
-        <button 
+        <button
           onClick={() => handleMenuClick("Beranda")}
           className="flex items-center gap-1.5 sm:gap-2 shrink-0 group outline-none text-left active:scale-95 transition-transform"
         >
@@ -80,8 +79,12 @@ export default function Navbar() {
           />
           {/* Ukuran teks diturunkan sedikit di HP agar muat berdampingan dengan tombol login/daftar */}
           <h1 className="text-[15px] sm:text-[16px] xl:text-[18px] font-black leading-none whitespace-nowrap tracking-wide select-none">
-            <span className="text-white group-hover:text-gray-200 transition-colors">ELANG</span>
-            <span className="text-yellow-400 group-hover:text-yellow-300 transition-colors">SHOP</span>
+            <span className="text-white group-hover:text-gray-200 transition-colors">
+              ELANG
+            </span>
+            <span className="text-yellow-400 group-hover:text-yellow-300 transition-colors">
+              SHOP
+            </span>
           </h1>
         </button>
 

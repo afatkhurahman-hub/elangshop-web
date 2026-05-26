@@ -113,7 +113,7 @@ export const productsData = {
         { label: "7000 Points", price: "Rp 658.000" },
         { label: "10500 Points", price: "Rp 980.000" },
       ],
-      "AOV": [
+      AOV: [
         { label: "40 Voucher", price: "Rp 12.207" },
         { label: "90 Voucher", price: "Rp 21.414" },
         { label: "230 Voucher", price: "Rp 49.035" },
@@ -140,9 +140,9 @@ export const productsData = {
       "Free Fire": "Masukkan Player ID",
       "PUBG Mobile": "Masukkan Character ID",
       "Call of Duty": "Masukkan OpenID CODM",
-      "Valorant": "Masukkan Riot ID + Tag (Nick#1234)",
-      "AOV": "Masukkan OpenID AOV",
-      "Genshin Impact": "Masukkan UID & Server (12345678 - Asia)"
+      Valorant: "Masukkan Riot ID + Tag (Nick#1234)",
+      AOV: "Masukkan OpenID AOV",
+      "Genshin Impact": "Masukkan UID & Server (12345678 - Asia)",
     },
   },
   Pulsa: {

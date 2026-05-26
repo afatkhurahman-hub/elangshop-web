@@ -45,6 +45,7 @@ export default function Hero() {
   const [selectedItem, setSelectedItem] = useState("");
   const [userId, setUserId] = useState(""); // State menangkap input User ID / Nomor tujuan
   const [currentPrice, setCurrentPrice] = useState("Rp 0");
+  const [showNotice, setShowNotice] = useState(false); // 🔥 STATE UNTUK MODAL NOTICE
 
   // Cek apakah tab yang aktif adalah kategori PLN
   const isPLN =
@@ -267,11 +268,17 @@ export default function Hero() {
     }
   };
 
-  const handleOrderWhatsApp = () => {
+  // 🔥 SEKARANG TOMBOL UTAMA MEMANGGIL INI TERLEBIH DAHULU UNTUK FILTER VALIDASI & POPUP MODAL
+  const handleValidateAndOpenNotice = () => {
     if (!userId.trim()) {
       alert(`Silakan isi ${getDynamicPlaceholder()} Anda terlebih dahulu!`);
       return;
     }
+    setShowNotice(true); // Buka modal notice konfirmasi jika input user id aman
+  };
+
+  const handleOrderWhatsApp = () => {
+    setShowNotice(false); // Tutup modal notice
 
     const nomorWA = "6281931194133";
 
@@ -457,8 +464,7 @@ export default function Hero() {
             </h1>
 
             <p className="text-gray-400 text-[15px] xl:text-[14px] leading-relaxed max-w-[460px] mx-auto lg:mx-0">
-              Top Up Game, pulsa, e-wallet, dan aplikasi premium dengan
-              pembayaran QRIS & proses instan.
+              Top-up game, pulsa, e-wallet, dan aplikasi premium murah dengan pembayaran QRIS serta proses instan 24 jam terpercaya
             </p>
 
             {/* ⚡ BARIS BENEFIT HORIZONTAL ⚡ */}
@@ -641,7 +647,7 @@ export default function Hero() {
                 {/* Buttons */}
                 <div className="flex gap-3 pt-1">
                   <button
-                    onClick={handleOrderWhatsApp}
+                    onClick={handleValidateAndOpenNotice} // 🔥 SEKARANG MEMANGGIL VALIDASI POPUP MODAL NOTICE
                     className="flex-1 h-[46px] sm:h-[52px] rounded-xl sm:rounded-2xl bg-[#FACC15] text-black font-black text-[13px] hover:bg-[#EAB308] transition shadow-lg shadow-[#FACC15]/10 active:scale-[0.99]"
                   >
                     Beli Sekarang
@@ -658,6 +664,39 @@ export default function Hero() {
           </div>
         </div>
       </section>
+
+      {/* 🔥 KODE MODAL POPUP DIALOG NOTICE BARU (Aman & Interaktif) */}
+      {showNotice && (
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="bg-[#091426] border border-[#FACC15]/30 w-full max-w-[400px] rounded-[24px] p-6 shadow-2xl text-center animate-in fade-in zoom-in-95 duration-150">
+            <div className="w-12 h-12 bg-[#FACC15]/10 border border-[#FACC15]/20 text-[#FACC15] rounded-full flex items-center justify-center mb-4 mx-auto text-xl">
+              ⚠️
+            </div>
+
+            <h3 className="text-white font-bold text-[16px] mb-2">Konfirmasi Pengisian Data</h3>
+            <p className="text-gray-400 text-[12.5px] leading-relaxed mb-6">
+              Pastikan pengisian data sudah benar. Kesalahan pengisian merupakan tanggung jawab anda.
+            </p>
+
+            <div className="grid grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => setShowNotice(false)} 
+                className="h-[46px] bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold text-[13px] rounded-xl transition"
+              >
+                Tidak, Edit Lagi
+              </button>
+              <button
+                type="button"
+                onClick={handleOrderWhatsApp} 
+                className="h-[46px] bg-[#FACC15] hover:bg-[#EAB308] text-black font-bold text-[13px] rounded-xl transition shadow-md shadow-[#FACC15]/10"
+              >
+                Ya, Sudah Benar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* LOWER SECTION: KATEGORI KARTU BAWAH */}
       <section className="px-6 xl:px-16 pb-16 text-white bg-[#050B18]">

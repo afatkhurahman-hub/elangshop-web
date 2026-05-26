@@ -181,7 +181,7 @@ export default function Hero() {
             </div>
 
             {/* TEXT MAIN */}
-            <h1 className="text-[32px] sm:text-[40px] xl:text-[40px] leading-[1.1] lg:leading-[1.00] font-black tracking-tight drop-shadow-md">
+            <h1 className="text-[32px] sm:text-[40px] xl:text-[28px] leading-[1.1] lg:leading-[1.00] font-black tracking-tight drop-shadow-md">
               Top Up Cepat,
               <br />
               <span className="text-[#FACC15]">Harga Hemat,</span>
@@ -190,8 +190,9 @@ export default function Hero() {
             </h1>
 
             <p className="text-gray-400 text-[14px] leading-relaxed max-w-[480px] mx-auto lg:mx-0">
-              Top up game, pulsa, e-wallet, dan aplikasi premium dengan
-              pembayaran QRIS & proses instan.
+              Top-up game, pulsa, e-wallet, dan aplikasi premium murah dengan
+              pembayaran QRIS serta proses instan 24 jam aman, cepat, dan
+              terpercaya.
             </p>
 
             {/* INFO BANNER HORIZONTAL */}
