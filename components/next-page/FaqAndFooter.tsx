@@ -11,6 +11,7 @@ const faqs = [
   "Kenapa transaksi saya pending?",
   "Apakah ada refund jika top up gagal?",
   "Jam berapa customer service aktif?",
+  "Kenapa harus memilih ElangShop dibandingkan yang lain?",
 ];
 
 const faqAnswers = [
@@ -18,7 +19,13 @@ const faqAnswers = [
   "Transaksi pending biasanya terjadi karena adanya antrean sistem pada provider game atau gangguan pada mutasi e-wallet/bank. Silakan tunggu 5-10 menit atau hubungi CS WhatsApp jika belum masuk.",
   "Tentu saja! Jika sistem kami gagal memproses pesanan Anda karena kesalahan teknis, saldo atau uang Anda akan dikembalikan 100% tanpa potongan.",
   "Customer Service ElangShop aktif dan siap membantu kamu setiap hari selama 24 jam non-stop (24/7)!",
+  "ElangShop menggunakan sistem integrasi otomatis 24/7 untuk setiap transaksi top up dan pembelian akun premium, didukung oleh jalur pembayaran legal serta layanan Customer Service yang responsif. Dengan sistem otomatis ini, kamu tidak perlu menunggu proses manual dari admin. Transaksi tetap berjalan meski tengah malam, prosesnya jauh lebih cepat dari toko konvensional, dan yang terpenting: biaya admin kami jauh lebih rendah sehingga harga akhirnya tetap wajar dan ramah di kantong. Kamu nggak perlu lagi stres nungguin saldo masuk saat lagi butuh-butuhnya. Mabar jalan terus, kerjaan tetap lancar, dan langganan aplikasi favorit jadi lebih hemat. Kamu mendapatkan kecepatan, kenyamanan, dan penghematan dalam satu tempat tanpa perlu takut akun bermasalah. Stop buang waktu dan uangmu! Klik link di bawah ini untuk Top Up Sekarang dan rasakan sensasi transaksi secepat kilat!" 
 ];
+
+const CopyWriting = {
+  title: "⚖️ Syarat & Ketentuan Penggunaan",
+  content: "Dengan bertransaksi di ElangShop, pembeli dianggap telah membaca, memahami, dan menyetujui semua aturan yang berlaku. Layanan ElangShop terbuka untuk umum, namun pastikan Anda menggunakan metode pembayaran milik sendiri atau atas izin orang tua.\n\n⚠️ Penting Sebelum Melakukan Transaksi! ⚠️\nPastikan ID Game, Server, atau Nomor HP sudah benar. Kesalahan input data adalah tanggung jawab pembeli. Setelah pengisian data selesai nanti akan muncul pop-up pengecekan. Klik Tidak jika ada yang salah ketik, klik Ya jika semua sudah benar. Semua produk digital yang sudah sukses diproses tidak bisa dibatalkan atau dikembalikan uangnya."
+};
 
 const syaratKetentuan = {
   title: "⚖️ Syarat & Ketentuan Penggunaan",
@@ -132,10 +139,10 @@ export default function FaqAndFooter() {
               <div className="max-w-[320px] flex flex-col justify-between h-full py-1">
                 <div>
                   <h3 className="flex flex-col leading-[1.08] font-bold">
-                    <span className="text-[26px] text-yellow-400 tracking-[-0.5px]">Butuh Bantuan?</span>
+                    <span className="text-[56px] text-yellow-400 tracking-[-0.5px]">Butuh Bantuan?</span>
                     <span className="mt-2 text-[26px] text-yellow-400 tracking-[-0.5px]">Hubungi CS Kami</span>
                   </h3>
-                  <p className="mt-4 max-w-[260px] text-[14px] leading-[1.8] text-gray-400">Kami siap membantu 24/7 kapanpun kamu butuh.</p>
+                  <p className="mt-4 max-w-[300px] text-[16px] leading-[1.6] text-gray-400">Kami siap membantu 24/7 kapanpun kamu butuh.</p>
                 </div>
                 <div>
                   <a href="https://wa.me/6281931194133?text=Halo%20MinEls%2C%20saya%20butuh%20bantuan" target="_blank" rel="noopener noreferrer" className="mt-6 flex h-[50px] w-[210px] items-center justify-center gap-3 rounded-2xl border border-yellow-400/40 bg-[#0B1528]/80 backdrop-blur-xl font-semibold transition-all duration-300 hover:bg-yellow-400 hover:text-black active:scale-95 inline-flex text-white">

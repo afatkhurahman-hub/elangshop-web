@@ -464,7 +464,7 @@ export default function Hero() {
             </h1>
 
             <p className="text-gray-400 text-[15px] xl:text-[14px] leading-relaxed max-w-[460px] mx-auto lg:mx-0">
-              Top-up game, pulsa, e-wallet, dan aplikasi premium murah dengan pembayaran QRIS serta proses instan 24 jam terpercaya
+               ElangShop platform top up game, pulsa,data, e-wallet. PLN dan aplikasi premium murah, cepat dan terpercaya 
             </p>
 
             {/* ⚡ BARIS BENEFIT HORIZONTAL ⚡ */}
